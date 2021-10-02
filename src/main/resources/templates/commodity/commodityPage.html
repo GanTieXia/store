@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>杂货铺首页</title>
+</head>
+<link rel="stylesheet" href="../layui/css/layui.css">
+<body>
+  <div style="margin: 20px;padding: 20px">
+      <img src="/picture/picture.jpg" style="width: 170px;height: 220px" alt=""><br>
+      <label>名称：<span id="commodityName"></span></label><br>
+      <label>上架：<span id="inventoryBegin"></span></label><br>
+      <label>剩余：<span id="inventoryEnd"></span></label><br>
+      <br>
+      <button id="customer" class="layui-btn layui-btn-normal">购买+1</button>
+  </div>
+</body>
+<script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../layui/layui.js"></script>
+<script>
+    // 显示库存余量
+    $.ajax({
+        type: "post",
+        url : "/store/getCommodityInformation",
+        async : false,
+        cache : false,
+        success : function (data) {
+            $('#commodityName').html(data[0].commodityName);
+            $('#inventoryBegin').html(data[0].inventoryBegin);
+            $('#inventoryEnd').html(data[0].inventoryEnd);
+        }
+    })
+
+    // 购买按钮,弹出付款框
+    $('#customer').click(function () {
+        layer.open({
+            title: '付款'
+            ,content: ' <div style="float: left;width: 50%">\n' +
+                '                  <img src="/picture/weixinCode.png" style="width: 220px;height: 220px">\n' +
+                '                  <p style="text-align: center">微信</p>\n' +
+                '              </div>\n' +
+                '\n' +
+                '              <div style="float: left;width: 50%">\n' +
+                '                  <img src="/picture/zhifubaoCode.png" style="width: 220px;height: 220px">\n' +
+                '                  <p style="text-align: center">支付宝</p>\n' +
+                '              </div>'
+        });
+    })
+
+    // 点击取消按钮，关闭弹出框
+    $('#cancel').click(function () {
+        // 关闭付款弹窗
+        $('#itemInformation').hide();
+        // 关闭遮罩层
+        showAll();
+    })
+</script>
+</html>
