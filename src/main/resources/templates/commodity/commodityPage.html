@@ -6,14 +6,18 @@
 </head>
 <link rel="stylesheet" href="../layui/css/layui.css">
 <body>
-  <div style="margin: 20px;padding: 20px">
-      <img src="/picture/picture.jpg" style="width: 170px;height: 220px" alt=""><br>
+  <!--测试商品显示基本样式-->
+  <div style="margin: 10px;padding: 10px">
+      <img src="/picture/picture.jpg" style="width: 150px;height: 190px" alt=""><br>
       <label>名称：<span id="commodityName"></span></label><br>
-      <label>上架：<span id="inventoryBegin"></span></label><br>
-      <label>剩余：<span id="inventoryEnd"></span></label><br>
-      <br>
-      <button id="customer" class="layui-btn layui-btn-normal">购买+1</button>
+      <label>库存：<span id="inventoryBegin"></span></label><br>
+      <label>余量：<span id="inventoryEnd"></span></label><br>
+      <div>
+          <button id="customer" class="layui-btn layui-btn-sm" style="position: relative;left: 23px">购买</button>
+          <button id="collect" class="layui-btn layui-btn-sm layui-btn-danger" style="position: relative;left: 23px">收藏</button>
+      </div>
   </div>
+
 </body>
 <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../layui/layui.js"></script>
@@ -51,8 +55,6 @@
     $('#cancel').click(function () {
         // 关闭付款弹窗
         $('#itemInformation').hide();
-        // 关闭遮罩层
-        showAll();
     })
 </script>
 </html>

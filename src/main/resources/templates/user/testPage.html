@@ -52,7 +52,7 @@
                     </dl>
                 </li>
 
-<!--                <li class="layui-nav-item"><a href="javascript:;">功能三</a></li>-->
+                <li class="layui-nav-item"><a href="javascript:;">上架审核</a></li>
                 <li class="layui-nav-item"><a href="">关于我们</a></li>
             </ul>
         </div>
@@ -71,45 +71,14 @@
 <script type="text/javascript" src="../layui/layui.js"></script>
 <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 <script>
-
-    //JS
-    layui.use(['element', 'layer', 'util'], function(){
-        var element = layui.element
-            ,layer = layui.layer
-            ,util = layui.util
-            ,$ = layui.$;
-
-        //头部事件
-        util.event('lay-header-event', {
-            //左侧菜单事件
-            menuLeft: function(othis){
-                layer.msg('展开左侧菜单的操作', {icon: 0});
-            }
-            ,menuRight: function(){
-                layer.open({
-                    type: 1
-                    ,content: '<div style="padding: 15px;"> 账号：<span id="idNumber"></span></div>'
-                    ,area: ['260px', '100%']
-                    ,offset: 'rt' //右上角
-                    ,anim: 5
-                    ,shadeClose: true
-                });
-            }
-        });
-
-    });
-
-    // 这里我们随便加载一下数据，大家知道原理就好啦
+    // 加载账户名和账号
     $.ajax({
         type:"post",
-        url: "/firstTest/getMessage",
+        url: "",
         async:false,
         success:function (data) {
-            for(var i=0;i<data.length;i++){
-                $("#userName").html(data[0].userName)
-                $("#idNumber").html(data[0].idNumber)
-            }
-
+            $("#userName").html("用户名")
+            $("#idNumber").html("账号")
         }
     })
 </script>
