@@ -10,6 +10,7 @@
             commodity_name commodityName,
             inventory_begin inventoryBegin,
             inventory_end inventoryEnd,
+            price price,
             create_time createTime
         from
             t_commodity

@@ -8,8 +8,9 @@
 </head>
 <body>
 <div class="layui-layout layui-layout-admin layui-bg-black">
+    <!--头部区域导航区域-->
     <div class="layui-header layui-bg-black">
-        <div class="layui-logo layui-hide-xs layui-bg-black">解忧杂货铺</div>
+        <div class="layui-logo layui-hide-xs layui-bg-white">Yours杂货铺</div>
         <!-- 头部区域（可配合layui 已有的水平导航） -->
         <ul class="layui-nav layui-layout-right layui-bg-black">
             <li class="layui-nav-item layui-hide layui-show-md-inline-block">
@@ -18,9 +19,8 @@
                     <span id="userName">用户名</span>  |  <span id="idNumber">账号</span>
                 </a>
                 <dl class="layui-nav-child">
-<!--                    <dd><a href="">Your Profile</a></dd>-->
-<!--                    <dd><a href="">Settings</a></dd>-->
-                    <dd><a href="">Sign out</a></dd>
+                    <dd><a href="">个人中心</a></dd>
+                    <dd><a href="">退出</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
@@ -31,16 +31,16 @@
         </ul>
     </div>
 
-    <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+    <!--左侧导航区域-->
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-bg-black layui-nav-tree"  lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="" href="javascript:;">商品分类</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="/store/toCommodityPage">手机</a></dd>
-                        <dd><a href="javascript:;">平板</a></dd>
-                        <dd><a href="javascript:;">电脑</a></dd>
+                        <dd><a id="telPhone">手机</a></dd>
+                        <dd><a >平板</a></dd>
+                        <dd><a >电脑</a></dd>
                     </dl>
                 </li>
 
@@ -51,26 +51,38 @@
                         <dd><a href="javascript:;">下架商品</a></dd>
                     </dl>
                 </li>
-
-                <li class="layui-nav-item"><a href="javascript:;">上架审核</a></li>
-                <li class="layui-nav-item"><a href="">关于我们</a></li>
+                <li class="layui-nav-item"><a href="javascript:;">商品审核</a></li>
+                <li class="layui-nav-item"><a href="javascript:;">我的收藏</a></li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">我的订单</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">待发货</a></dd>
+                        <dd><a href="javascript:;">已签收</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">关于杂货铺</a></li>
             </ul>
         </div>
     </div>
 
     <!-- 内容主体区域 -->
     <div class="layui-body">
-      <iframe src="/store/toCommodityPage" style="width: 99%;height: 99%"></iframe>
+      <iframe id="informationMain" src="" style="width: 99%;height: 99%"></iframe>
     </div>
 
     <!-- 底部固定区域 -->
     <div class="layui-footer">
-        <p style="text-align: center;color: black">解忧杂货铺</p>
+        <p style="text-align: center;color: black">Yours杂货铺</p>
     </div>
 </div>
 <script type="text/javascript" src="../layui/layui.js"></script>
 <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 <script>
+
+    // 点击手机的时候
+    $('#telPhone').click(function () {
+        $('#informationMain').attr('src','/store/toCommodityPage');
+    })
     // 加载账户名和账号
     $.ajax({
         type:"post",

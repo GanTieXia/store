@@ -15,6 +15,8 @@ public class Commodity {
     private String inventoryBegin;
     /** 剩余库存*/
     private String inventoryEnd;
+    /** 价格*/
+    private String price;
     /** 创建时间*/
     private String createTime;
 
@@ -48,6 +50,14 @@ public class Commodity {
 
     public void setInventoryEnd(String inventoryEnd) {
         this.inventoryEnd = inventoryEnd;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public String getCreateTime() {

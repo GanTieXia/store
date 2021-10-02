@@ -9,11 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2021/9/11 15:06
  */
 @SpringBootApplication
-public class SpringbootTestApplication {
+public class StoreApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringbootTestApplication.class, args);
-        System.out.println("springBoot项目启动成功...");
+        SpringApplication.run(StoreApplication.class, args);
+        System.out.println("Yours杂货铺启动成功...");
     }
 
 }

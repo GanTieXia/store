@@ -21,6 +21,16 @@ public class CommodityCtrl {
     private CommodityService userService;
 
     /**
+     * 跳转主页
+     *
+     * @return
+     */
+    @RequestMapping("/toHomepage")
+    public String toHomepage(){
+        return "homepage/homepage";
+    }
+
+    /**
      * 跳转商品页
      *
      * @return
@@ -40,11 +50,4 @@ public class CommodityCtrl {
     public List<Commodity> getCommodityInformation(){
         return userService.getCommodityInformation();
     }
-
-    @RequestMapping("/testMyFirstPage")
-    public String toPage(){
-        return "/user/testPage";
-    }
-
-
 }

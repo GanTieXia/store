@@ -6,15 +6,39 @@
 </head>
 <link rel="stylesheet" href="../layui/css/layui.css">
 <body>
-  <!--测试商品显示基本样式-->
-  <div style="margin: 10px;padding: 10px">
-      <img src="/picture/picture.jpg" style="width: 150px;height: 190px" alt=""><br>
-      <label>名称：<span id="commodityName"></span></label><br>
-      <label>库存：<span id="inventoryBegin"></span></label><br>
-      <label>余量：<span id="inventoryEnd"></span></label><br>
+  <!--测试商品显示样式-->
+  <div style="margin: 10px;padding: 10px;width:13%;background-color: #9F9F9F;float: left">
+      <img src="/picture/sample_picture_one.jpg" style="width: 190px;height: 190px" alt=""><br>
+      <label>名称：<span ><a href="https://product.cnmo.com/cell_phone/index1625596.shtml" style="color: #0000FF" id="commodityName"></a></span></label><br>
+      <label>库存：<span id="inventoryEnd"></span></label><br>
+      <label>价格：<span id="price"></span></label><br>
       <div>
-          <button id="customer" class="layui-btn layui-btn-sm" style="position: relative;left: 23px">购买</button>
-          <button id="collect" class="layui-btn layui-btn-sm layui-btn-danger" style="position: relative;left: 23px">收藏</button>
+          <button id="customer" class="layui-btn layui-btn-sm">购买</button>
+          <button id="collect" class="layui-btn layui-btn-sm layui-btn-danger">收藏</button>
+      </div>
+  </div>
+
+  <!--测试商品显示样式-->
+  <div style="margin: 10px;padding: 10px;width:13%;background-color: #9F9F9F;float: left">
+      <img src="/picture/sample_picture_one.jpg" style="width: 190px;height: 190px" alt=""><br>
+      <label>名称：<span ><a href="https://product.cnmo.com/cell_phone/index1625596.shtml" style="color: #0000FF" id="commodityName1"></a></span></label><br>
+      <label>库存：<span id="inventoryEnd1"></span></label><br>
+      <label>价格：<span id="price1"></span></label><br>
+      <div>
+          <button id="customer1" class="layui-btn layui-btn-sm">购买</button>
+          <button id="collect1" class="layui-btn layui-btn-sm layui-btn-danger">收藏</button>
+      </div>
+  </div>
+
+  <!--测试商品显示样式-->
+  <div style="margin: 10px;padding: 10px;width:13%;background-color: #9F9F9F;float: left">
+      <img src="/picture/sample_picture_one.jpg" style="width: 190px;height: 190px" alt=""><br>
+      <label>名称：<span ><a href="https://product.cnmo.com/cell_phone/index1625596.shtml" style="color: #0000FF" id="commodityName2"></a></span></label><br>
+      <label>库存：<span id="inventoryEnd2"></span></label><br>
+      <label>价格：<span id="price2"></span></label><br>
+      <div>
+          <button id="customer2" class="layui-btn layui-btn-sm">购买</button>
+          <button id="collect2" class="layui-btn layui-btn-sm layui-btn-danger">收藏</button>
       </div>
   </div>
 
@@ -22,6 +46,11 @@
 <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../layui/layui.js"></script>
 <script>
+
+    $('#commodityName').click(function () {
+        $(".head1_topbar").remove();
+    })
+
     // 显示库存余量
     $.ajax({
         type: "post",
@@ -29,14 +58,53 @@
         async : false,
         cache : false,
         success : function (data) {
+            // 样式数据显示，待改
             $('#commodityName').html(data[0].commodityName);
-            $('#inventoryBegin').html(data[0].inventoryBegin);
             $('#inventoryEnd').html(data[0].inventoryEnd);
+            $('#price').html("￥"+data[0].price);
+            // 样式数据显示，待改
+            $('#commodityName1').html(data[0].commodityName);
+            $('#inventoryEnd1').html(data[0].inventoryEnd);
+            $('#price1').html("￥"+data[0].price);
+            // 样式数据显示，待改
+            $('#commodityName2').html(data[0].commodityName);
+            $('#inventoryEnd2').html(data[0].inventoryEnd);
+            $('#price2').html("￥"+data[0].price);
         }
     })
 
-    // 购买按钮,弹出付款框
+    // 购买按钮,样式测试，待改
     $('#customer').click(function () {
+        layer.open({
+            title: '付款'
+            ,content: ' <div style="float: left;width: 50%">\n' +
+                '                  <img src="/picture/weixinCode.png" style="width: 220px;height: 220px">\n' +
+                '                  <p style="text-align: center">微信</p>\n' +
+                '              </div>\n' +
+                '\n' +
+                '              <div style="float: left;width: 50%">\n' +
+                '                  <img src="/picture/zhifubaoCode.png" style="width: 220px;height: 220px">\n' +
+                '                  <p style="text-align: center">支付宝</p>\n' +
+                '              </div>'
+        });
+    })
+    // 购买按钮,样式测试，待改
+    $('#customer1').click(function () {
+        layer.open({
+            title: '付款'
+            ,content: ' <div style="float: left;width: 50%">\n' +
+                '                  <img src="/picture/weixinCode.png" style="width: 220px;height: 220px">\n' +
+                '                  <p style="text-align: center">微信</p>\n' +
+                '              </div>\n' +
+                '\n' +
+                '              <div style="float: left;width: 50%">\n' +
+                '                  <img src="/picture/zhifubaoCode.png" style="width: 220px;height: 220px">\n' +
+                '                  <p style="text-align: center">支付宝</p>\n' +
+                '              </div>'
+        });
+    })
+    // 购买按钮,样式测试，待改
+    $('#customer2').click(function () {
         layer.open({
             title: '付款'
             ,content: ' <div style="float: left;width: 50%">\n' +
