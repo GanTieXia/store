@@ -1,4 +1,7 @@
 spring:
+  mvc:
+    servlet:
+      load-on-startup: 1
   #thymeleaf页面缓存关闭
   thymeleaf:
     cache: false

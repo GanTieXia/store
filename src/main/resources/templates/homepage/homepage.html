@@ -20,6 +20,7 @@
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">个人中心</a></dd>
+                    <dd><a href="/login/toLoginPage">登录</a></dd>
                     <dd><a href="">退出</a></dd>
                 </dl>
             </li>
@@ -47,7 +48,7 @@
                 <li class="layui-nav-item layui-nav-itemed">
                     <a class="" href="javascript:;">商品管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">上架商品</a></dd>
+                        <dd><a id="uploadCommodity">上架商品</a></dd>
                         <dd><a href="javascript:;">下架商品</a></dd>
                     </dl>
                 </li>
@@ -75,23 +76,35 @@
         <p style="text-align: center;color: black">Yours杂货铺</p>
     </div>
 </div>
-<script type="text/javascript" src="../layui/layui.js"></script>
 <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../layui/layui.js"></script>
 <script>
+
+    // 回显账号信息
+    $.ajax({
+        type:"post",
+        url : "/login/showUserMessage",
+        async:false,
+        success:function (data) {
+            console.log(data)
+            if(data.userName == null && data.idNumber == null){
+                $('#userName').html("用户名");
+                $('#idNumber').html("账号");
+            } else if(data != null){
+                $('#userName').html(data.userName);
+                $('#idNumber').html(data.idNumber);
+            }
+        }
+    })
 
     // 点击手机的时候
     $('#telPhone').click(function () {
         $('#informationMain').attr('src','/store/toCommodityPage');
     })
-    // 加载账户名和账号
-    $.ajax({
-        type:"post",
-        url: "",
-        async:false,
-        success:function (data) {
-            $("#userName").html("用户名")
-            $("#idNumber").html("账号")
-        }
+
+    // 点击上架商品
+    $('#uploadCommodity').click(function () {
+        $('#informationMain').attr('src','/store/toManageCommodityPage');
     })
 </script>
 </body>

@@ -27,7 +27,7 @@ public class CommodityCtrl {
      */
     @RequestMapping("/toHomepage")
     public String toHomepage(){
-        return "homepage/homepage";
+        return "/homepage/homepage";
     }
 
     /**
@@ -38,6 +38,16 @@ public class CommodityCtrl {
     @RequestMapping("/toCommodityPage")
     public String toCommodityPage(){
         return "/commodity/commodityPage";
+    }
+
+    /**
+     * 跳转商品页
+     *
+     * @return
+     */
+    @RequestMapping("/toManageCommodityPage")
+    public String toManageCommodityPage(){
+        return "/manage/manageCommodityPage";
     }
 
     /**
