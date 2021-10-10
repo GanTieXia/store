@@ -25,7 +25,7 @@ public class CommodityCtrl {
      *
      * @return
      */
-    @RequestMapping("/toHomepage")
+    @RequestMapping("/homepage")
     public String toHomepage(){
         return "/homepage/homepage";
     }
