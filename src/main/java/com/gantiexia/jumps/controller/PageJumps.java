@@ -12,10 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("pageJumps")
 public class PageJumps {
-
-    @Autowired
-    private CommodityService userService;
-
     /**
      * 跳转主页
      *
