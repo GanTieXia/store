@@ -36,7 +36,7 @@
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-bg-black layui-nav-tree"  lay-filter="test">
-                <li class="layui-nav-item layui-nav-itemed">
+                <li class="layui-nav-item">
                     <a class="" href="javascript:;">商品分类</a>
                     <dl class="layui-nav-child">
                         <dd><a id="telPhone">手机</a></dd>
@@ -45,7 +45,7 @@
                     </dl>
                 </li>
 
-                <li class="layui-nav-item layui-nav-itemed">
+                <li class="layui-nav-item">
                     <a class="" href="javascript:;">商品管理</a>
                     <dl class="layui-nav-child">
                         <dd><a id="uploadCommodity">上架商品</a></dd>
@@ -54,14 +54,14 @@
                 </li>
                 <li class="layui-nav-item"><a href="javascript:;">商品审核</a></li>
                 <li class="layui-nav-item"><a href="javascript:;">我的收藏</a></li>
-                <li class="layui-nav-item layui-nav-itemed">
+                <li class="layui-nav-item">
                     <a class="" href="javascript:;">我的订单</a>
                     <dl class="layui-nav-child">
                         <dd><a href="javascript:;">待发货</a></dd>
                         <dd><a href="javascript:;">已签收</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="">关于杂货铺</a></li>
+                <li class="layui-nav-item" ><a id="aboutStore">关于杂货铺</a></li>
             </ul>
         </div>
     </div>
@@ -99,12 +99,17 @@
 
     // 点击手机的时候
     $('#telPhone').click(function () {
-        $('#informationMain').attr('src','/store/toCommodityPage');
+        $('#informationMain').attr('src','/pageJumps/toCommodityPage');
     })
 
     // 点击上架商品
     $('#uploadCommodity').click(function () {
-        $('#informationMain').attr('src','/store/toManageCommodityPage');
+        $('#informationMain').attr('src','/pageJumps/toManageCommodityPage');
+    })
+
+    // 点击关于杂货铺
+    $('#aboutStore').click(function () {
+        $('#informationMain').attr('src','/pageJumps/toAboutStorePage');
     })
 </script>
 </body>

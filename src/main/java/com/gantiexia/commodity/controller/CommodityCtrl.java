@@ -14,41 +14,11 @@ import java.util.List;
  * @date 2021/8/20 23:06
  */
 @Controller
-@RequestMapping("store")
+@RequestMapping("commodity")
 public class CommodityCtrl {
 
     @Autowired
     private CommodityService userService;
-
-    /**
-     * 跳转主页
-     *
-     * @return
-     */
-    @RequestMapping("/homepage")
-    public String toHomepage(){
-        return "/homepage/homepage";
-    }
-
-    /**
-     * 跳转商品页
-     *
-     * @return
-     */
-    @RequestMapping("/toCommodityPage")
-    public String toCommodityPage(){
-        return "/commodity/commodityPage";
-    }
-
-    /**
-     * 跳转商品页
-     *
-     * @return
-     */
-    @RequestMapping("/toManageCommodityPage")
-    public String toManageCommodityPage(){
-        return "/manage/manageCommodityPage";
-    }
 
     /**
      * 查询商品信息
