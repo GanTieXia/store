@@ -7,7 +7,8 @@
 </head>
 <body style="background-color: #2E2D3C">
 <div>
-    <div style="padding: 20px;background-color: #9F9F9F;width: 400px;height: 150px;margin-top: 15%;margin-left: 38%;border-radius: 20px">
+    <div id="loginDiv">
+        <div style="padding: 20px;background-color: #9F9F9F;width: 400px;height: 150px;margin-top: 15%;margin-left: 38%;border-radius: 20px">
             <div class="layui-form-item">
                 <label class="layui-form-label" style="color: white">账号：</label>
                 <div class="layui-input-inline">
@@ -21,18 +22,105 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <a id="turnToHomePage">
-                    <button id="loginSystem" class="layui-btn" style="position: relative;left: 120px">登录</button>
+                <a id="turnToRegisterPage">
+                    <button id="goToRegister" class="layui-btn" style="position: relative;left: 120px">去注册</button>
                 </a>
-                <button id="" class="layui-btn" style="position: relative;left: 140px">注册</button>
+                <a id="turnToHomePage">
+                    <button id="loginSystem" class="layui-btn" style="position: relative;left: 140px">登录</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form" style="display: none" id="registerDiv">
+        <div style="padding: 20px;background-color: #9F9F9F;width: 400px;height: 430px;margin-top: 9%;margin-left: 38%;border-radius: 20px">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="color: white">账号：</label>
+                <div class="layui-input-inline">
+                    <input type="tel" id="idNumberRegister" name="idNumber" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="color: white">密码：</label>
+                <div class="layui-input-inline">
+                    <input type="password" id="passwordRegister" name="password" autocomplete="off" class="layui-input">
+                </div>
             </div>
 
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="color: white">用户名：</label>
+                <div class="layui-input-inline">
+                    <input type="password" id="userName" name="password" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="color: white">性别：</label>
+                <div class="layui-input-inline">
+                    <select name="sex">
+                        <!--首选：selected  禁选：disabled-->
+                        <option value=""></option>
+                        <option value="0">男</option>
+                        <option value="1">女</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="color: white">头像：</label>
+                <button type="button" class="layui-btn" id="test1">上传图片</button>
+            </div>
+            <div class="layui-upload" style="position: relative;left: 110px">
+                <div class="layui-upload-list">
+                    <img style="width: 92px;height: 92px" class="layui-upload-img" id="demo1">
+                    <p id="demoText"></p>
+                </div>
+                <div style="width: 95px;">
+                    <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                        <div class="layui-progress-bar" lay-percent=""></div>
+                    </div>
+                </div>
+            </div>
+
+            <a name="list-progress"> </a>
+
+            <div style="margin-top: 10px;">
+
+            </div>
+
+            <div class="layui-form-item">
+                <a id="turnLoginPage">
+                    <button id="goToLoginSystem" class="layui-btn" style="position: relative;left: 120px">去登录</button>
+                </a>
+                <button id="registerRegister" class="layui-btn" style="position: relative;left: 140px">注册</button>
+            </div>
+        </div>
     </div>
 
 </div>
 <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../layui/layui.js"></script>
 <script>
+
+    // 点击去注册
+    $('#goToRegister').click(function () {
+        // 登录弹窗消失
+        $('#loginDiv').attr('style','display: none');
+        // 注册弹窗显示
+        $('#registerDiv').show();
+    })
+
+    // 点击去登陆
+    $('#goToLoginSystem').click(function () {
+        // 登录弹窗显示
+        $('#loginDiv').show();
+        // 注册弹窗消失
+        $('#registerDiv').attr('style','display: none');
+    })
+
+
     // 登录系统
     $('#loginSystem').click(function () {
         // 账号
@@ -55,6 +143,7 @@
             return;
         }
 
+        // 判断是否登录成功
         $.ajax({
             type:"post",
             url : "/login/loginSystem",
@@ -71,7 +160,7 @@
                         time: 3000,
                     });
                     // 跳转主页
-                    $('#turnToHomePage').attr('href','/pageJumps/homepage')
+                    $('#turnToHomePage').attr('href','/store/homepage')
                 } else if (data.code == '404'){
                     // 状态码为404登录失败
                     layer.msg('账号不存在或密码错误', {
@@ -81,6 +170,53 @@
             }
         })
     })
+
+    // 上传头像
+    layui.use(['upload', 'element', 'layer'], function(){
+        var $ = layui.jquery
+            ,upload = layui.upload
+            ,element = layui.element
+            ,layer = layui.layer;
+
+        // 常规使用 - 普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: 'https://httpbin.org/post' //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+
+                element.progress('demo', '0%'); //进度条复位
+                layer.msg('上传中', {icon: 16, time: 0});
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.code > 0){
+                    return layer.msg('上传失败');
+                }
+                //上传成功的一些操作
+                //……
+                $('#demoText').html(''); //置空上传失败的状态
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function(){
+                    uploadInst.upload();
+                });
+            }
+            //进度条
+            ,progress: function(n, elem, e){
+                element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
+                if(n == 100){
+                    layer.msg('上传完毕', {icon: 1});
+                }
+            }
+        });
+    });
 </script>
 </body>
 </html>

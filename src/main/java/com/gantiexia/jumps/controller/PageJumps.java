@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @date 2021/8/20 23:06
  */
 @Controller
-@RequestMapping("pageJumps")
+@RequestMapping("store")
 public class PageJumps {
     /**
      * 跳转主页
@@ -50,6 +50,16 @@ public class PageJumps {
     @RequestMapping("/toAboutStorePage")
     public String toAboutStorePage(){
         return "/about_store/aboutStore";
+    }
+
+    /**
+     * 跳转登录页面
+     *
+     * @return
+     */
+    @RequestMapping("/loginPage")
+    public String toLoginPage(){
+        return "/login/loginPage";
     }
 
 }

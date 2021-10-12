@@ -21,16 +21,6 @@ public class LoginCtrl {
     private UserService userService;
 
     /**
-     * 跳转登录页面
-     *
-     * @return
-     */
-    @RequestMapping("/toLoginPage")
-    public String toLoginPage(){
-        return "/login/loginPage";
-    }
-
-    /**
      * 返回登陆人信息
      *
      * @return
