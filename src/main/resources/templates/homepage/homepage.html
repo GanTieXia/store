@@ -15,7 +15,7 @@
         <ul class="layui-nav layui-layout-right layui-bg-black">
             <li class="layui-nav-item layui-hide layui-show-md-inline-block">
                 <a href="javascript:;">
-                    <img src="/picture/picture.jpg" class="layui-nav-img">
+                    <img id="personagePicture" src="/picture/picture.jpg" class="layui-nav-img">
                     <span id="userName">用户名</span>  |  <span id="idNumber">账号</span>
                 </a>
                 <dl class="layui-nav-child">
@@ -86,13 +86,15 @@
         url : "/login/showUserMessage",
         async:false,
         success:function (data) {
-            console.log(data)
             if(data.userName == null && data.idNumber == null){
                 $('#userName').html("用户名");
                 $('#idNumber').html("账号");
+
             } else if(data != null){
                 $('#userName').html(data.userName);
                 $('#idNumber').html(data.idNumber);
+                $('#personagePicture').attr('src',data.personagePicture);
+
             }
         }
     })

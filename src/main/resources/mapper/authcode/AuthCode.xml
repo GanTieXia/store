@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gantiexia.authcode.mapper.AuthCodeMapper">
+
+    <resultMap type="com.gantiexia.authcode.mapper.AuthCodeMapper" id="AuthCodeResult">
+        <result property="id"    column="id"    />
+        <result property="id_number"    column="idNumber"    />
+        <result property="email"    column="email"    />
+        <result property="auth_code"    column="authCode"    />
+        <result property="create_time"    column="crateTime"    />
+    </resultMap>
+
+    <insert id="insertAuthCode" parameterType="com.gantiexia.authcode.entity.AuthCode">
+        insert into s_authcode
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="idNumber != null">id_number,</if>
+            <if test="email != null">email,</if>
+            <if test="authCode != null">auth_code,</if>
+            <if test="crateTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="idNumber != null">#{idNumber},</if>
+            <if test="email != null">#{email},</if>
+            <if test="authCode != null">#{authCode},</if>
+            <if test="crateTime != null">#{crateTime},</if>
+        </trim>
+    </insert>
+
+    <select id="selectAuthCodeInformation" resultType="com.gantiexia.authcode.entity.AuthCode">
+        select
+            id id,
+            id_number idNumber,
+            email email,
+            auth_code authCode,
+            create_time crateTime
+        from
+            s_authcode
+        <where>
+            <if test="idNumber != null ">id_number = #{idNumber}</if>
+        </where>
+    </select>
+
+</mapper>

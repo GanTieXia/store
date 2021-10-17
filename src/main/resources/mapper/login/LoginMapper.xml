@@ -4,16 +4,60 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gantiexia.login.mapper.LoginMapper">
 
+    <resultMap type="com.gantiexia.login.mapper.LoginMapper" id="LoginResult">
+        <result property="id"    column="id"    />
+        <result property="user_name"    column="userName"    />
+        <result property="sex"    column="sex"    />
+        <result property="email"    column="email"    />
+        <result property="personage_picture"    column="personagePicture"    />
+        <result property="id_number"    column="idNumber"    />
+        <result property="password"    column="password"    />
+        <result property="create_time"    column="crateTime"    />
+    </resultMap>
+
     <select id="getUserMessage" parameterType="com.gantiexia.login.entity.User" resultType="com.gantiexia.login.entity.User">
         select
             id id,
+            user_name userName,
+            sex sex,
+            email email,
+            personage_picture personagePicture,
             id_number idNumber,
             password password,
-            user_name userName
+            create_time createTime
         from
             s_user
-        where
-        id_number = #{idNumber}
+        <where>
+            <if test="idNumber != null ">id_number = #{idNumber}</if>
+        </where>
+    </select>
+
+    <insert id="register" parameterType="com.gantiexia.login.entity.User">
+        insert into s_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="email != null">email,</if>
+            <if test="personagePicture != null">personage_picture,</if>
+            <if test="idNumber != null">id_number,</if>
+            <if test="password != null">password,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="email != null">#{email},</if>
+            <if test="personagePicture != null">#{personagePicture},</if>
+            <if test="idNumber != null">#{idNumber},</if>
+            <if test="password != null">#{password},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <select id="getNextIdNumber" resultType="java.lang.String">
+        select max(id_number) from s_user
     </select>
 
 </mapper>
