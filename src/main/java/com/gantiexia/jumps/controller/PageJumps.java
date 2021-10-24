@@ -61,7 +61,7 @@ public class PageJumps {
     }
 
     /**
-     * 主页加载系统统计界面
+     * 主页加载系统统计图表界面
      *
      * @return
      */
