@@ -1,7 +1,5 @@
 package com.gantiexia.jumps.controller;
 
-import com.gantiexia.commodity.service.CommodityService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -62,4 +60,13 @@ public class PageJumps {
         return "/login/loginPage";
     }
 
+    /**
+     * 主页加载系统统计界面
+     *
+     * @return
+     */
+    @RequestMapping("/countPage")
+    public String toCountPage(){
+        return "/commodity/countPage";
+    }
 }

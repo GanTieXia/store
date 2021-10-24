@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>杂货铺首页统计图表</title>
+</head>
+<link rel="stylesheet" href="../layui/css/layui.css">
+<body>
+<!--后端接口后续更新，目前是效果图，假数据-->
+<div class="layui-card-body">
+    <div id="EchartOrder" style="width: 50%;height: 300px;float: left;border-radius: 5px"> </div>
+    <div id="EchartOrderTwo" style="width: 50%;height: 300px;float: left;border-radius: 5px"> </div>
+    <div id="EchartOrderThree" style="width: 50%;height: 300px;float: left;border-radius: 5px"> </div>
+    <div id="EchartOrderFour" style="width: 50%;height: 300px;float: left;border-radius: 5px"> </div>
+</div>
+
+</body>
+<script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../layui/layui.js"></script>
+<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+<script>
+    // 最近七天平台访问量条形图
+    var myChart = echarts.init(document.getElementById('EchartOrder'));
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: '最近七天平台访问量'
+        },
+        tooltip: {},
+        // legend: {
+        //     data:['访问量']
+        // },
+        toolbox: {
+            feature: {
+                saveAsImage: {},
+                left: 'center'
+            }
+        },
+        xAxis: {
+            data: ["2021-10-18","2021-10-19","2021-10-20","2021-10-21","2021-10-22","2021-10-23","2021-10-24"]
+        },
+        yAxis: {},
+        series: [{
+            name: '访问量',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10, 20,30]
+        }]
+    };
+    // 渲染
+    myChart.setOption(option);
+
+    // 最近七天订单成交量折线图
+    var myChartTwo = echarts.init(document.getElementById('EchartOrderTwo'));
+    // 指定图表的配置项和数据
+    var optionTwo = {
+        title: {
+            text: '最近七天订单成交量'
+        },
+        lineStyle:{
+            color:'#333'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {},
+                left: 'center'
+            }
+        },
+        xAxis: {
+            type: 'category',
+            data: ["2021-10-18","2021-10-19","2021-10-20","2021-10-21","2021-10-22","2021-10-23","2021-10-24"]
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '订单成交量',
+                data: [150, 230, 224, 218, 135, 147, 260],
+                type: 'line'
+            }
+        ]
+    };
+    // 渲染
+    myChartTwo.setOption(optionTwo);
+
+    // 订单归属地饼状图
+    var myChartThree = echarts.init(document.getElementById('EchartOrderThree'));
+    var optionThree = {
+        title: {
+            text: '订单归属地',
+            subtext: '近7天',
+            left: 'center'
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {},
+                left: 'center'
+            }
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left'
+        },
+        series: [
+            {
+                name: '地区',
+                type: 'pie',
+                radius: '50%',
+                data: [
+                    { value: 300, name: '重庆' },
+                    { value: 200, name: '上海' },
+                    { value: 108, name: '广州' },
+                    { value: 200, name: '四川' },
+                    { value: 30, name: '深圳' }
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    // 渲染
+    myChartThree.setOption(optionThree);
+
+    // 订单量退单量对比图
+    var myChartFour = echarts.init(document.getElementById('EchartOrderFour'));
+    var optionFour = {
+        title: {
+            text: '订单量退单量对比'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['订单成交量', '订单取消量']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            // 是否全部展示
+            //boundaryGap: false,
+            data: ["2021-10-18","2021-10-19","2021-10-20","2021-10-21","2021-10-22","2021-10-23","2021-10-24"]
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '订单成交量',
+                type: 'line',
+                data: [280, 460, 520, 780, 390, 330, 999]
+            },
+            {
+                name: '订单取消量',
+                type: 'line',
+                data: [50, 78, 110, 380, 250, 90, 80]
+            }
+        ]
+    };
+    // 渲染
+    myChartFour.setOption(optionFour);
+
+</script>
+</html>
