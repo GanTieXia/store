@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gantiexia.count.mapper.CountMapper">
+
+    <resultMap type="com.gantiexia.count.mapper.CountMapper" id="AuthCodeResult">
+        <result property="id"    column="id"    />
+        <result property="visit"    column="visits"    />
+        <result property="count_time"    column="countTime"    />
+    </resultMap>
+
+    <insert id="insertTodayCountVisit" parameterType="com.gantiexia.count.entity.Count">
+        insert into t_count
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="visit != null">visit,</if>
+            <if test="countTime != null">count_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="visit != null">#{visit},</if>
+            <if test="countTime != null">#{countTime},</if>
+        </trim>
+    </insert>
+
+    <select id="selectTodayCount" resultType="com.gantiexia.count.entity.Count">
+        select
+        id id,
+        visit visit,
+        str_to_date(count_time,'%Y-%m-%d') countTime
+        from
+        t_count
+        where
+        str_to_date(count_time,'%Y-%m-%d') = str_to_date(curdate(),'%Y-%m-%d')
+    </select>
+
+    <update id="updateCount" parameterType="com.gantiexia.count.entity.Count">
+        update t_count set
+            visit = #{visit}
+        where
+            str_to_date(count_time,'%Y-%m-%d') = str_to_date(curdate(),'%Y-%m-%d')
+    </update>
+
+    <select id="selectAllCount" resultType="com.gantiexia.count.entity.Count">
+        select
+        id id,
+        visit visit,
+        str_to_date(count_time,'%Y-%m-%d') countTimeText
+        from
+        t_count
+        where date(count_time) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+    </select>
+
+</mapper>

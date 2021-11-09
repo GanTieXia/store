@@ -1,5 +1,7 @@
 package com.gantiexia.jumps.controller;
 
+import com.gantiexia.count.service.CountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -10,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("store")
 public class PageJumps {
+
+    @Autowired
+    private CountService countService;
+
     /**
      * 跳转主页
      *
@@ -17,6 +23,10 @@ public class PageJumps {
      */
     @RequestMapping("/homepage")
     public String toHomepage(){
+        // 记录访问量信息，没访问一次这个网址，访问量增加1
+        countService.insertCountVisit();
+
+        // 跳转页面
         return "/homepage/homepage";
     }
 

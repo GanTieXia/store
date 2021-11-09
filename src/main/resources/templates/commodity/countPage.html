@@ -20,34 +20,55 @@
 <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
 <script>
     // 最近七天平台访问量条形图
-    var myChart = echarts.init(document.getElementById('EchartOrder'));
-    // 指定图表的配置项和数据
-    var option = {
-        title: {
-            text: '最近七天平台访问量'
-        },
-        tooltip: {},
-        // legend: {
-        //     data:['访问量']
-        // },
-        toolbox: {
-            feature: {
-                saveAsImage: {},
-                left: 'center'
+    // 添加用户
+    $.ajax({
+        type:"post",
+        url : "/count/recentlyCount",
+        async:false,
+        success:function (data) {
+
+            var x = [];
+            var y = [];
+
+            for(var i=0;i<data.length;i++){
+                x.push(data[i].countTimeText);
+                y.push(data[i].visit);
             }
-        },
-        xAxis: {
-            data: ["2021-10-18","2021-10-19","2021-10-20","2021-10-21","2021-10-22","2021-10-23","2021-10-24"]
-        },
-        yAxis: {},
-        series: [{
-            name: '访问量',
-            type: 'bar',
-            data: [5, 20, 36, 10, 10, 20,30]
-        }]
-    };
-    // 渲染
-    myChart.setOption(option);
+
+            console.log(x)
+            console.log(y)
+
+            var myChart = echarts.init(document.getElementById('EchartOrder'));
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: '最近七天平台访问量'
+                },
+                tooltip: {},
+                // legend: {
+                //     data:['访问量']
+                // },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {},
+                        left: 'center'
+                    }
+                },
+                xAxis: {
+                    data: x
+                },
+                yAxis: {},
+                series: [{
+                    name: '访问量',
+                    type: 'bar',
+                    data: y
+                }]
+            };
+            // 渲染
+            myChart.setOption(option);
+        }
+    })
+
 
     // 最近七天订单成交量折线图
     var myChartTwo = echarts.init(document.getElementById('EchartOrderTwo'));
