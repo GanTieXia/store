@@ -24,7 +24,7 @@ public class RedisUtils {
      * @return
      */
     public String get(final String key) {
-        return redisTemplate.opsForValue().get(key);
+        return redisTemplate.opsForValue().get("store_"+key);
     }
 
     /**
@@ -33,7 +33,7 @@ public class RedisUtils {
     public boolean set(final String key, String value) {
         boolean result = false;
         try {
-            redisTemplate.opsForValue().set(key, value);
+            redisTemplate.opsForValue().set("store_"+key, value);
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class RedisUtils {
     public boolean setKeyTimeOut(final String key,String value,long timeOut,TimeUnit timeUnit){
         boolean result = false;
         try {
-            redisTemplate.opsForValue().set(key, value, timeOut, timeUnit);
+            redisTemplate.opsForValue().set("store_"+key, value, timeOut, timeUnit);
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,7 +67,7 @@ public class RedisUtils {
     public boolean getAndSet(final String key, String value) {
         boolean result = false;
         try {
-            redisTemplate.opsForValue().getAndSet(key, value);
+            redisTemplate.opsForValue().getAndSet("store_"+key, value);
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,7 +81,7 @@ public class RedisUtils {
     public boolean delete(final String key) {
         boolean result = false;
         try {
-            redisTemplate.delete(key);
+            redisTemplate.delete("store_"+key);
             result = true;
         } catch (Exception e) {
             e.printStackTrace();

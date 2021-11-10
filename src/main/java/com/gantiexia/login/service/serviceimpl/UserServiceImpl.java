@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
         System.out.println(redisUtils.get(authCode.getEmail()));
         if(StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
             // 将验证码放入redis,失效时间为60s
-            redisUtils.setKeyTimeOut(authCode.getEmail(),String.valueOf(authCodes),60, TimeUnit.SECONDS);
+            redisUtils.setKeyTimeOut(authCode.getEmail(),String.valueOf(authCodes),180, TimeUnit.SECONDS);
         } else if(!StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
             map.put("code","500");
             map.put("message","已发送验证码，请勿重复发送");
