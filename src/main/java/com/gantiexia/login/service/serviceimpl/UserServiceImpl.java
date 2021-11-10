@@ -7,9 +7,13 @@ import com.gantiexia.login.controller.LoginCtrl;
 import com.gantiexia.login.entity.User;
 import com.gantiexia.login.mapper.LoginMapper;
 import com.gantiexia.login.service.UserService;
+import com.gantiexia.redis.RedisUtils;
+import io.netty.util.internal.SocketUtils;
+import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -17,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
@@ -125,6 +130,9 @@ public class UserServiceImpl implements UserService {
         return nextIdNumber;
     }
 
+    @Autowired
+    private RedisUtils redisUtils;
+
     /**
      * 发送并存储验证码
      *
@@ -141,22 +149,33 @@ public class UserServiceImpl implements UserService {
             authCodes.append((int)((Math.random()*10)))  ;
         }
 
-        // 根据业务需求，每个账号只存在一条验证码记录，所以如果重复点击发送验证码时，提示验证码已发送
-        AuthCode authCodePram = new AuthCode();
-        List<AuthCode> authCodeList = authCodeMapper.selectAuthCodeInformation(authCodePram);
-        // 创建集合装入
-        List<AuthCode> alreadySendList = new ArrayList<>();
-        for(AuthCode ac : authCodeList){
-            if(ac.getIdNumber().equals(authCode.getIdNumber())){
-                alreadySendList.add(ac);
-            }
-        }
-        // 当重复点击发送验证码时
-        if(alreadySendList.size() > 0){
+        // 如果验证码不存在，则存入。如果验证码存在，则提示验证码已经发送
+        System.out.println(redisUtils.get(authCode.getEmail()));
+        if(StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
+            // 将验证码放入redis,失效时间为60s
+            redisUtils.setKeyTimeOut(authCode.getEmail(),String.valueOf(authCodes),60, TimeUnit.SECONDS);
+        } else if(!StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
             map.put("code","500");
             map.put("message","已发送验证码，请勿重复发送");
             return map;
         }
+
+//        // 根据业务需求，每个账号只存在一条验证码记录，所以如果重复点击发送验证码时，提示验证码已发送
+//        AuthCode authCodePram = new AuthCode();
+//        List<AuthCode> authCodeList = authCodeMapper.selectAuthCodeInformation(authCodePram);
+//        // 创建集合装入
+//        List<AuthCode> alreadySendList = new ArrayList<>();
+//        for(AuthCode ac : authCodeList){
+//            if(ac.getIdNumber().equals(authCode.getIdNumber())){
+//                alreadySendList.add(ac);
+//            }
+//        }
+//        // 当重复点击发送验证码时
+//        if(alreadySendList.size() > 0){
+//            map.put("code","500");
+//            map.put("message","已发送验证码，请勿重复发送");
+//            return map;
+//        }
 
         // 每个邮箱只能绑定一个用户
         User user = new User();
@@ -176,26 +195,34 @@ public class UserServiceImpl implements UserService {
             return map;
         }
 
-        // 将验证码、账号、邮箱存入表格中，放入前台校验
-        authCode.setAuthCode(String.valueOf(authCodes));
-        Date date = new Date();
-        authCode.setCrateTime(date);
-        authCode.setEmail(authCode.getEmail());
-        // 执行插入
-        int n = authCodeMapper.insertAuthCode(authCode);
-        if(n == 1){
-            map.put("code","200");
-            map.put("message","验证码发送成功");
+        // 如果成功走到这里，发送邮件
+        map.put("code","200");
+        map.put("message","验证码发送成功");
+        // 当验证码生成成功时才发送验证码
+        MailUtil.send(authCode.getEmail(), "Yours杂货铺", "欢迎您的注册！<br>您的注册验证码为:<label style=\"color: red\">"+authCodes+"</label>" +
+                "<br>请妥善保管，防止丢失！<br>如不是您本人操作，请忽略！", true);
+        return map;
 
-            // 当验证码生成成功时才发送验证码
-            MailUtil.send(authCode.getEmail(), "Yours杂货铺", "欢迎您的注册！<br>您的注册验证码为:<label style=\"color: red\">"+authCodes+"</label>" +
-                    "<br>请妥善保管，防止丢失！<br>如不是您本人操作，请忽略！", true);
-            return map;
-        } else {
-            map.put("code","404");
-            map.put("message","验证码发送失败");
-            return map;
-        }
+//        // 将验证码、账号、邮箱存入表格中，放入前台校验
+//        authCode.setAuthCode(String.valueOf(authCodes));
+//        Date date = new Date();
+//        authCode.setCrateTime(date);
+//        authCode.setEmail(authCode.getEmail());
+//        // 执行插入
+//        int n = authCodeMapper.insertAuthCode(authCode);
+//        if(n == 1){
+//            map.put("code","200");
+//            map.put("message","验证码发送成功");
+//
+//            // 当验证码生成成功时才发送验证码
+//            MailUtil.send(authCode.getEmail(), "Yours杂货铺", "欢迎您的注册！<br>您的注册验证码为:<label style=\"color: red\">"+authCodes+"</label>" +
+//                    "<br>请妥善保管，防止丢失！<br>如不是您本人操作，请忽略！", true);
+//            return map;
+//        } else {
+//            map.put("code","404");
+//            map.put("message","验证码发送失败");
+//            return map;
+//        }
     }
 
     /**
@@ -287,34 +314,64 @@ public class UserServiceImpl implements UserService {
         user.setPersonagePicture(personagePicture);
         // 设置系统时间
         user.setCreateTime(date);
-        // 先判断验证码是否正确，获取该账号下的验证码对象
-        AuthCode authCode = new AuthCode();
-        authCode.setIdNumber(user.getIdNumber());
-        List<AuthCode> authCodeList = authCodeMapper.selectAuthCodeInformation(authCode);
-        // 如果这条验证记录存在
-        if(authCodeList.size() > 0){
-            if(authCodeList.get(0).getAuthCode().equals(user.getAuthCode())){
-                // 执行插入
-                int n = loginMapper.register(user);
-                if(n == 1){
-                    map.put("code","200");
-                    map.put("message","注册成功");
-                    return map;
-                } else {
-                    map.put("code","404");
-                    map.put("message","注册失败");
-                    return map;
-                }
-            }else if(!authCodeList.get(0).getAuthCode().equals(user.getAuthCode())){
+
+        // 从redis中取得验证码
+        String authCode = redisUtils.get(user.getEmail());
+
+        // 如果redis中的验证码不存在，提示验证码失效，请重新发送
+        if(StringUtil.isNullOrEmpty(authCode)){
+            map.put("code","404");
+            map.put("message","验证码失效，请重新发送");
+            return map;
+        }
+
+        // 如果缓存中的验证码与传回来的验证码相等，执行插入，完成注册
+        if(authCode.equals(user.getAuthCode())){
+            // 执行插入
+            int n = loginMapper.register(user);
+            if(n == 1){
+                map.put("code","200");
+                map.put("message","注册成功");
+                return map;
+            } else {
                 map.put("code","404");
-                map.put("message","验证码错误");
+                map.put("message","注册失败");
                 return map;
             }
         } else {
             map.put("code","404");
-            map.put("message","验证码生成失败，请联系管理员");
+            map.put("message","验证码错误");
             return map;
         }
-        return map;
+
+//        // 先判断验证码是否正确，获取该账号下的验证码对象
+//        AuthCode authCode = new AuthCode();
+//        authCode.setIdNumber(user.getIdNumber());
+//        List<AuthCode> authCodeList = authCodeMapper.selectAuthCodeInformation(authCode);
+//
+//        // 如果这条验证记录存在
+//        if(authCodeList.size() > 0){
+//            if(authCodeList.get(0).getAuthCode().equals(user.getAuthCode())){
+//                // 执行插入
+//                int n = loginMapper.register(user);
+//                if(n == 1){
+//                    map.put("code","200");
+//                    map.put("message","注册成功");
+//                    return map;
+//                } else {
+//                    map.put("code","404");
+//                    map.put("message","注册失败");
+//                    return map;
+//                }
+//            }else if(!authCodeList.get(0).getAuthCode().equals(user.getAuthCode())){
+//                map.put("code","404");
+//                map.put("message","验证码错误");
+//                return map;
+//            }
+//        } else {
+//            map.put("code","404");
+//            map.put("message","验证码生成失败，请联系管理员");
+//            return map;
+//        }
     }
 }
