@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -24,14 +26,14 @@ public class LoginCtrl {
     private UserService userService;
 
     /**
-     * 返回登陆人信息
+     * 登陆
      *
      * @return
      */
     @RequestMapping("/loginSystem")
     @ResponseBody
-    public Map<String,String> loginSystem(User user){
-        return userService.getUserMessage(user);
+    public Map<String,String> loginSystem(User user, HttpServletRequest request){
+        return userService.getUserMessage(user,request);
     }
 
     /**

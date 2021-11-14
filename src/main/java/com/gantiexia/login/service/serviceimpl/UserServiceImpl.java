@@ -16,6 +16,10 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -57,7 +61,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Map<String,String> getUserMessage(User user) {
+    public Map<String,String> getUserMessage(User user, HttpServletRequest request) {
         // 创建一个Map集合装处理结果
         Map map = new HashMap(2);
 

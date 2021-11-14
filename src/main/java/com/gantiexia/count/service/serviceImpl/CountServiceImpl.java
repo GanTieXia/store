@@ -28,20 +28,20 @@ public class CountServiceImpl implements CountService {
      * @return
      */
     @Override
-    synchronized public int insertCountVisit() {
+    synchronized public void insertCountVisit() {
         // 查询是否存在今天的统计数据
         Count todayCount = countMapper.selectTodayCount();
+
         if(todayCount == null){
             // 执行插入今天的第一条访问量数据
             Count countPram = new Count();
-
+            // 时间为今天
             Date date = new Date();
-            // 时间
             countPram.setCountTime(date);
             // 访问量
             countPram.setVisit("1");
-
-            int n = countMapper.insertTodayCountVisit(countPram);
+            // 执行插入
+            countMapper.insertTodayCountVisit(countPram);
 
         } else if(todayCount != null){
             // 执行修改，访问量+1操作
@@ -52,10 +52,9 @@ public class CountServiceImpl implements CountService {
             // 访问量
             countPram.setVisit(countAdd);
             // 执行修改
-            int n = countMapper.updateCount(countPram);
+            countMapper.updateCount(countPram);
 
         }
-        return 0;
     }
 
     /**

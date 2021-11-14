@@ -20,23 +20,21 @@
 <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
 <script>
     // 最近七天平台访问量条形图
-    // 添加用户
     $.ajax({
         type:"post",
         url : "/count/recentlyCount",
         async:false,
         success:function (data) {
 
+            // X轴数据
             var x = [];
+            // y轴数据
             var y = [];
 
             for(var i=0;i<data.length;i++){
                 x.push(data[i].countTimeText);
                 y.push(data[i].visit);
             }
-
-            console.log(x)
-            console.log(y)
 
             var myChart = echarts.init(document.getElementById('EchartOrder'));
             // 指定图表的配置项和数据

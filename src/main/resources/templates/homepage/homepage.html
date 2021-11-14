@@ -23,7 +23,7 @@
                 <dl class="layui-nav-child">
                     <dd><a href="">个人中心</a></dd>
                     <dd><a href="/store/loginPage">登录</a></dd>
-                    <dd><a href="">退出</a></dd>
+                    <dd><a id="outSystem" href="">退出</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
@@ -81,7 +81,6 @@
 <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../layui/layui.js"></script>
 <script>
-
     // 回显账号信息
     $.ajax({
         type:"post",

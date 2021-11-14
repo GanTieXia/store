@@ -16,7 +16,7 @@ public interface CountService {
      * @param
      * @return
      */
-    int insertCountVisit();
+    void insertCountVisit();
 
     /**
      * 查询最近7天的访问量

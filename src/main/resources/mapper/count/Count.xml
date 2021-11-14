@@ -44,12 +44,13 @@
 
     <select id="selectAllCount" resultType="com.gantiexia.count.entity.Count">
         select
-        id id,
-        visit visit,
-        str_to_date(count_time,'%Y-%m-%d') countTimeText
+            id id,
+            visit visit,
+            str_to_date(count_time,'%Y-%m-%d') countTimeText
         from
-        t_count
-        where date(count_time) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+            t_count
+        where
+            date(count_time) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
     </select>
 
 </mapper>

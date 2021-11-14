@@ -4,6 +4,8 @@ import com.gantiexia.authcode.entity.AuthCode;
 import com.gantiexia.login.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -18,7 +20,7 @@ public interface UserService {
      * @param user
      * @return
      */
-    Map<String,String> getUserMessage(User user);
+    Map<String,String> getUserMessage(User user, HttpServletRequest request);
 
     /**
      * 前端回显账号信息
