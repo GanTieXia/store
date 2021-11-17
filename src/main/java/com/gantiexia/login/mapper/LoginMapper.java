@@ -32,4 +32,12 @@ public interface LoginMapper {
      * @return
      */
     int register(User user);
+
+    /**
+     * 获取当前登录用户
+     *
+     * @param idNumber
+     * @return
+     */
+    User getLoginUser(String idNumber);
 }

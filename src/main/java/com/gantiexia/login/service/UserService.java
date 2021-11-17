@@ -3,8 +3,6 @@ package com.gantiexia.login.service;
 import com.gantiexia.authcode.entity.AuthCode;
 import com.gantiexia.login.entity.User;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -27,7 +25,15 @@ public interface UserService {
      *
      * @return
      */
-    User showUserMessage();
+    String showUserMessage();
+
+    /**
+     * 获取当前登录用户
+     *
+     * @param idNumber
+     * @return
+     */
+    User getLoginUser(String idNumber);
 
     /**
      * 邮箱验证码

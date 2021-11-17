@@ -32,6 +32,22 @@
         </where>
     </select>
 
+    <select id="getLoginUser" parameterType="java.lang.String" resultType="com.gantiexia.login.entity.User">
+        select
+            id id,
+            user_name userName,
+            sex sex,
+            email email,
+            personage_picture personagePicture,
+            id_number idNumber,
+            password password,
+            create_time createTime
+        from
+            s_user
+        where
+            id_number = #{idNumber}
+    </select>
+
     <insert id="register" parameterType="com.gantiexia.login.entity.User">
         insert into s_user
         <trim prefix="(" suffix=")" suffixOverrides=",">

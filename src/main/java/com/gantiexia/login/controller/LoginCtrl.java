@@ -43,8 +43,9 @@ public class LoginCtrl {
      */
     @RequestMapping("/showUserMessage")
     @ResponseBody
-    public User showUserMessage(){
-        return userService.showUserMessage();
+    public User getLoginUser(){
+        String idNumber = userService.showUserMessage();
+        return userService.getLoginUser(idNumber);
     }
 
     /**

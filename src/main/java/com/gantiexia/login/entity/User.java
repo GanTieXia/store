@@ -98,4 +98,19 @@ public class User {
     public void setAuthCode(String authCode) {
         this.authCode = authCode;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", userName='" + userName + '\'' +
+                ", idNumber='" + idNumber + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", sex='" + sex + '\'' +
+                ", personagePicture='" + personagePicture + '\'' +
+                ", createTime=" + createTime +
+                ", authCode='" + authCode + '\'' +
+                '}';
+    }
 }

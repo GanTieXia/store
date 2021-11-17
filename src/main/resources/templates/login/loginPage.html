@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>登录注册</title>
-    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="/layui/css/layui.css">
     <style>
         .layui-progress-big{
             background-color: #9F9F9F;
@@ -12,32 +12,59 @@
 </head>
 <body style="background-color: #2E2D3C">
 <div>
+<!--    <div id="loginDiv">-->
+<!--        <div style="padding: 20px;background-color: #9F9F9F;width: 400px;height: 150px;margin-top: 15%;margin-left: 38%;border-radius: 20px">-->
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label" style="color: white">账号：</label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input type="tel" id="idNumber" name="idNumber" autocomplete="off" class="layui-input">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label" style="color: white">密码：</label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input type="password" id="password" name="password" autocomplete="off" class="layui-input">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="layui-form-item">-->
+<!--                <a id="turnToRegisterPage">-->
+<!--                    <button id="goToRegister" class="layui-btn" style="position: relative;left: 120px">去注册</button>-->
+<!--                </a>-->
+<!--                <a id="turnToHomePage">-->
+<!--                    <button id="loginSystem" class="layui-btn" style="position: relative;left: 140px">登录</button>-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
     <div id="loginDiv">
         <div style="padding: 20px;background-color: #9F9F9F;width: 400px;height: 150px;margin-top: 15%;margin-left: 38%;border-radius: 20px">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="color: white">账号：</label>
-                <div class="layui-input-inline">
-                    <input type="tel" id="idNumber" name="idNumber" autocomplete="off" class="layui-input">
+            <!-- 由SpringSecurity管理控制的登录-->
+            <form action="/loginSys" method="POST">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="color: white">账号：</label>
+                    <div class="layui-input-inline">
+                        <input type="tel" id="idNumber" name="idNumber" autocomplete="off" class="layui-input">
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="color: white">密码：</label>
-                <div class="layui-input-inline">
-                    <input type="password" id="password" name="password" autocomplete="off" class="layui-input">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="color: white">密码：</label>
+                    <div class="layui-input-inline">
+                        <input type="password" id="password" name="password" autocomplete="off" class="layui-input">
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <a id="turnToRegisterPage">
-                    <button id="goToRegister" class="layui-btn" style="position: relative;left: 120px">去注册</button>
-                </a>
-                <a id="turnToHomePage">
-                    <button id="loginSystem" class="layui-btn" style="position: relative;left: 140px">登录</button>
-                </a>
-            </div>
+                <input type="submit" value="登录" class="layui-btn" style="position: relative;left: 130px">
+            </form>
+
+            <!-- 显示注册模块-->
+            <a id="turnToRegisterPage">
+                <button id="goToRegister" class="layui-btn" style="position: relative;left: 215px;top: -38px">去注册</button>
+            </a>
+
         </div>
     </div>
 
-
+    <!-- 注册模块-->
     <div class="layui-form" lay-filter="selFilter" style="display: none" id="registerDiv">
         <div style="padding: 20px;background-color: #9F9F9F;width: 400px;height: 550px;margin-top: 5%;margin-left: 38%;border-radius: 20px">
             <div class="layui-form-item">
@@ -89,7 +116,7 @@
 
             <div class="layui-form-item">
                 <label class="layui-form-label" style="color: white">头像：</label>
-                <button type="button" class="layui-btn layui-btn-sm" id="test1">上传图片</button>
+                <button type="button" class="layui-btn layui-btn-sm" id="uploadPicture">上传图片</button>
             </div>
             <div class="layui-upload" style="position: relative;left: 110px">
                 <div class="layui-upload-list" id="pictureShow">
@@ -164,6 +191,7 @@
             var idNumber = $('#registerDiv #idNumberRegister').val();
             // 密码
             var password = $('#registerDiv #passwordRegister').val();
+
             if(password == null || password == ''){
                 layer.msg('请输入密码', {
                     // 1s后自动关闭
@@ -349,7 +377,7 @@
 
         //  上传图片组件
         var uploadInst = upload.render({
-            elem: '#test1'
+            elem: '#uploadPicture'
             ,url: '/login/layupload'
             ,data: {
                 idNumber : idNumber,

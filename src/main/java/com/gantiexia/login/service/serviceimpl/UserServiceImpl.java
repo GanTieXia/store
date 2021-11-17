@@ -3,26 +3,25 @@ package com.gantiexia.login.service.serviceimpl;
 import cn.hutool.extra.mail.MailUtil;
 import com.gantiexia.authcode.entity.AuthCode;
 import com.gantiexia.authcode.mapper.AuthCodeMapper;
-import com.gantiexia.login.controller.LoginCtrl;
 import com.gantiexia.login.entity.User;
 import com.gantiexia.login.mapper.LoginMapper;
 import com.gantiexia.login.service.UserService;
 import com.gantiexia.redis.RedisUtils;
-import io.netty.util.internal.SocketUtils;
 import io.netty.util.internal.StringUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -36,21 +35,17 @@ import java.util.logging.Logger;
 public class UserServiceImpl implements UserService {
 
     // 添加日志打印
-    private static final Logger logger = Logger.getLogger(String.valueOf(UserServiceImpl.class));
+    private static final Log logger = LogFactory.getLog(UserServiceImpl.class);
 
     @Autowired
     private LoginMapper loginMapper;
     @Autowired
     private AuthCodeMapper authCodeMapper;
+    @Autowired
+    private RedisUtils redisUtils;
 
-    /** 存储账号*/
-    private String idNumber;
-    /** 存储用户名*/
-    private String userName;
     /** 存储图片的名字*/
     private String fileName;
-    /** 图片路径*/
-    private String fileNamePath;
 
     /** 初始idNumber,第一个生成的*/
     private final String idNumberStart = "10000001";
@@ -62,6 +57,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Map<String,String> getUserMessage(User user, HttpServletRequest request) {
+
         // 创建一个Map集合装处理结果
         Map map = new HashMap(2);
 
@@ -75,10 +71,6 @@ public class UserServiceImpl implements UserService {
         }
 
         User userSys = userSysList.get(0);
-        // 设置账号信息用于前端获取显示
-        idNumber = userSys.getIdNumber();
-        userName = userSys.getUserName();
-        fileNamePath = userSys.getPersonagePicture();
 
         // 如果系统中的密码与输入的密码不相等
         if(userSys != null){
@@ -103,13 +95,22 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public User showUserMessage() {
-        User user = new User();
-        // 设置user的回显字段
-        user.setIdNumber(idNumber);
-        user.setUserName(userName);
-        user.setPersonagePicture(fileNamePath);
-        return user;
+    public String showUserMessage() {
+        // Security中存储账号的对象
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // 返回Security中存储的账号信息
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    /**
+     * 获取当前登录用户
+     *
+     * @param idNumber
+     * @return
+     */
+    @Override
+    public User getLoginUser(String idNumber) {
+        return loginMapper.getLoginUser(idNumber);
     }
 
     /**
@@ -134,9 +135,6 @@ public class UserServiceImpl implements UserService {
         return nextIdNumber;
     }
 
-    @Autowired
-    private RedisUtils redisUtils;
-
     /**
      * 发送并存储验证码
      *
@@ -155,6 +153,7 @@ public class UserServiceImpl implements UserService {
 
         // 如果验证码不存在，则存入。如果验证码存在，则提示验证码已经发送
         System.out.println(redisUtils.get(authCode.getEmail()));
+
         if(StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
             // 将验证码放入redis,失效时间为60s
             redisUtils.setKeyTimeOut(authCode.getEmail(),String.valueOf(authCodes),180, TimeUnit.SECONDS);
@@ -163,23 +162,6 @@ public class UserServiceImpl implements UserService {
             map.put("message","已发送验证码，请勿重复发送");
             return map;
         }
-
-//        // 根据业务需求，每个账号只存在一条验证码记录，所以如果重复点击发送验证码时，提示验证码已发送
-//        AuthCode authCodePram = new AuthCode();
-//        List<AuthCode> authCodeList = authCodeMapper.selectAuthCodeInformation(authCodePram);
-//        // 创建集合装入
-//        List<AuthCode> alreadySendList = new ArrayList<>();
-//        for(AuthCode ac : authCodeList){
-//            if(ac.getIdNumber().equals(authCode.getIdNumber())){
-//                alreadySendList.add(ac);
-//            }
-//        }
-//        // 当重复点击发送验证码时
-//        if(alreadySendList.size() > 0){
-//            map.put("code","500");
-//            map.put("message","已发送验证码，请勿重复发送");
-//            return map;
-//        }
 
         // 每个邮箱只能绑定一个用户
         User user = new User();
@@ -206,27 +188,6 @@ public class UserServiceImpl implements UserService {
         MailUtil.send(authCode.getEmail(), "Yours杂货铺", "欢迎您的注册！<br>您的注册验证码为:<label style=\"color: red\">"+authCodes+"</label>" +
                 "<br>请妥善保管，防止丢失！<br>如不是您本人操作，请忽略！", true);
         return map;
-
-//        // 将验证码、账号、邮箱存入表格中，放入前台校验
-//        authCode.setAuthCode(String.valueOf(authCodes));
-//        Date date = new Date();
-//        authCode.setCrateTime(date);
-//        authCode.setEmail(authCode.getEmail());
-//        // 执行插入
-//        int n = authCodeMapper.insertAuthCode(authCode);
-//        if(n == 1){
-//            map.put("code","200");
-//            map.put("message","验证码发送成功");
-//
-//            // 当验证码生成成功时才发送验证码
-//            MailUtil.send(authCode.getEmail(), "Yours杂货铺", "欢迎您的注册！<br>您的注册验证码为:<label style=\"color: red\">"+authCodes+"</label>" +
-//                    "<br>请妥善保管，防止丢失！<br>如不是您本人操作，请忽略！", true);
-//            return map;
-//        } else {
-//            map.put("code","404");
-//            map.put("message","验证码发送失败");
-//            return map;
-//        }
     }
 
     /**
@@ -329,11 +290,42 @@ public class UserServiceImpl implements UserService {
             return map;
         }
 
+        // 密码加密方式：MD5
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            byte[] tmp = digest.digest(user.getPassword().getBytes());
+
+            // 转换为以十六进制的无符号整数形式，用一个整数参数的字符串表示形式
+            // 可自行定义，但是要与SpringSecurity中的密码校验方式相同
+            StringBuilder passWord = new StringBuilder("");
+            for(byte b : tmp){
+                String s = Integer.toHexString(b & 0xFF);
+                if(s.length() == 1){
+                    passWord.append("0");
+                }
+                passWord.append(s);
+            }
+
+            user.setPassword(passWord.toString());
+
+        } catch (NoSuchAlgorithmException e) {
+            logger.info("密码加密失败...");
+            e.printStackTrace();
+        }
+
+
         // 如果缓存中的验证码与传回来的验证码相等，执行插入，完成注册
         if(authCode.equals(user.getAuthCode())){
             // 执行插入
             int n = loginMapper.register(user);
             if(n == 1){
+
+                // 注册成功,如果缓存未过期,清除redis中的缓存
+                String authCodeNow = redisUtils.get(user.getEmail());
+                if(authCodeNow != null){
+                    redisUtils.delete(user.getEmail());
+                }
+
                 map.put("code","200");
                 map.put("message","注册成功");
                 return map;
@@ -347,35 +339,5 @@ public class UserServiceImpl implements UserService {
             map.put("message","验证码错误");
             return map;
         }
-
-//        // 先判断验证码是否正确，获取该账号下的验证码对象
-//        AuthCode authCode = new AuthCode();
-//        authCode.setIdNumber(user.getIdNumber());
-//        List<AuthCode> authCodeList = authCodeMapper.selectAuthCodeInformation(authCode);
-//
-//        // 如果这条验证记录存在
-//        if(authCodeList.size() > 0){
-//            if(authCodeList.get(0).getAuthCode().equals(user.getAuthCode())){
-//                // 执行插入
-//                int n = loginMapper.register(user);
-//                if(n == 1){
-//                    map.put("code","200");
-//                    map.put("message","注册成功");
-//                    return map;
-//                } else {
-//                    map.put("code","404");
-//                    map.put("message","注册失败");
-//                    return map;
-//                }
-//            }else if(!authCodeList.get(0).getAuthCode().equals(user.getAuthCode())){
-//                map.put("code","404");
-//                map.put("message","验证码错误");
-//                return map;
-//            }
-//        } else {
-//            map.put("code","404");
-//            map.put("message","验证码生成失败，请联系管理员");
-//            return map;
-//        }
     }
 }
