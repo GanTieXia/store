@@ -21,7 +21,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return new com.example.demo.securitylogin.MyPasswordEncoder();
+        return new MyPasswordEncoder();
     }
 
     @Override

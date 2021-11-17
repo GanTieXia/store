@@ -9,8 +9,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 /**
  * 自定义用户认证
  *
@@ -27,8 +25,6 @@ public class UserLoginServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        System.out.println("自定义用户认证逻辑");
-
         // 查询出系统此账号的账号信息
         User userSys = loginMapper.getLoginUser(username);
 
@@ -36,11 +32,8 @@ public class UserLoginServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("此用户不存在");
         }
 
-        System.out.println("自定义用户认证逻辑登录用户："+ userSys.toString());
-
         org.springframework.security.core.userdetails.User result =
                 new org.springframework.security.core.userdetails.User(userSys.getIdNumber(),userSys.getPassword(), AuthorityUtils.createAuthorityList());
-
 
         return result;
     }

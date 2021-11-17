@@ -1,4 +1,4 @@
-package com.example.demo.securitylogin;
+package com.gantiexia.security;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -17,7 +17,6 @@ public class MyPasswordEncoder implements PasswordEncoder {
      */
     @Override
     public String encode(CharSequence charSequence) {
-        System.out.println("加密逻辑执行");
         try {
             MessageDigest digest = MessageDigest.getInstance("MD5");
             byte[] tmp = digest.digest(charSequence.toString().getBytes());
@@ -36,7 +35,6 @@ public class MyPasswordEncoder implements PasswordEncoder {
      */
     @Override
     public boolean matches(CharSequence charSequence, String s) {
-        System.out.println("匹配逻辑执行");
         return s.equals(encode(charSequence));
     }
 
