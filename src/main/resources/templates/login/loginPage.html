@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>登录注册</title>
@@ -11,6 +11,7 @@
         .layui-input-block .layui-form-checkbox span{
             color: white;
         }
+
     </style>
 </head>
 <body style="background-color: #2E2D3C">
@@ -41,21 +42,26 @@
 <!--    </div>-->
 
     <div id="loginDiv">
-        <div style="padding: 20px;background-color: #9F9F9F;width: 400px;height: 193px;margin-top: 15%;margin-left: 38%;border-radius: 20px">
+        <div style="padding: 20px;background-color: #9F9F9F;width: 380px;height: 210px;margin-top: 15%;margin-left: 38%;border-radius: 20px">
             <!-- 由SpringSecurity管理控制的登录-->
             <form action="/loginSys" method="POST" class="layui-form">
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="color: white">账号：</label>
                     <div class="layui-input-inline">
-                        <input type="tel" id="idNumber" name="idNumber" autocomplete="off" class="layui-input">
+                        <input type="text" required  lay-verify="required" id="idNumber" name="idNumber" autocomplete="off" class="layui-input">
                     </div>
                 </div>
+
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="color: white">密码：</label>
                     <div class="layui-input-inline">
-                        <input type="password" id="password" name="password" autocomplete="off" class="layui-input">
+                        <input required  lay-verify="required" type="password" id="password" name="password" autocomplete="off" class="layui-input">
                     </div>
                 </div>
+
+                <label style="color: red;position:relative;left: 108px;width: 108px" th:if="${param.error}"
+                       th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}">
+                </label>
 
                 <div class="layui-form-item" style="background-color: #9F9F9F">
                     <div class="layui-input-block">
@@ -63,12 +69,14 @@
                     </div>
                 </div>
 
-                <input type="submit" value="登录" class="layui-btn" style="position: relative;left: 130px">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" style="position: relative;left: 125px">登录</button>
+
+<!--                <input type="submit" value="登录" class="layui-btn" style="position: relative;left: 130px">-->
             </form>
 
-            <!-- 显示注册模块-->
+            <!-- 显示注册模块按钮-->
             <a id="turnToRegisterPage">
-                <button id="goToRegister" class="layui-btn" style="position: relative;left: 215px;top: -38px">去注册</button>
+                <button id="goToRegister" class="layui-btn" style="position: relative;left: 205px;top: -38px">去注册</button>
             </a>
 
         </div>
@@ -86,7 +94,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="color: white">密码：</label>
                 <div class="layui-input-inline">
-                    <input type="password" id="passwordRegister" name="password" lay-verify="required" autocomplete="off" class="layui-input">
+                    <input type="password" id="passwordRegister" name="password" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
@@ -142,14 +150,13 @@
 
             <a name="list-progress"> </a>
 
-            <div style="margin-top: 10px;">
-
-            </div>
+            <div style="margin-top: 10px;"></div>
 
             <div class="layui-form-item">
                 <a id="turnLoginPage">
                     <button id="goToLoginSystem" class="layui-btn" style="position: relative;left: 120px">去登录</button>
                 </a>
+
                 <button type="button" id="registerRegister" class="layui-btn" style="position: relative;left: 140px">注册</button>
             </div>
         </div>
@@ -159,6 +166,14 @@
 <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../layui/layui.js"></script>
 <script>
+
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)');
+    });
+
     // 上传头像
     layui.use(['upload', 'element', 'layer'], function(){
         var $ = layui.jquery
@@ -205,7 +220,7 @@
             if(password == null || password == ''){
                 layer.msg('请输入密码', {
                     // 1s后自动关闭
-                    time: 3000,
+                    time: 1000,
                 });
                 return;
             }
@@ -214,7 +229,7 @@
             if(userName == null || userName == ''){
                 layer.msg('请输入用户名', {
                     // 1s后自动关闭
-                    time: 3000,
+                    time: 1000,
                 });
                 return;
             }
@@ -223,7 +238,7 @@
             if(sex == null || sex == ''){
                 layer.msg('请输入性别', {
                     // 1s后自动关闭
-                    time: 3000,
+                    time: 1000,
                 });
                 return;
             }
@@ -232,7 +247,7 @@
             if(email == null || email == ''){
                 layer.msg('请输入邮箱', {
                     // 1s后自动关闭
-                    time: 3000,
+                    time: 1000,
                 });
                 return;
             }
@@ -241,7 +256,7 @@
             if(email == null || authCode == ''){
                 layer.msg('请输入验证码', {
                     // 1s后自动关闭
-                    time: 3000,
+                    time: 1000,
                 });
                 return;
             }
@@ -250,7 +265,7 @@
             if(image == null || image == ''){
                 layer.msg('请上传头像', {
                     // 1s后自动关闭
-                    time: 3000,
+                    time: 1000,
                 });
                 return;
             }
@@ -271,7 +286,7 @@
                 success:function (data) {
                     layer.msg(data.message, {
                         // 1s后自动关闭
-                        time: 3000,
+                        time: 1000,
                     });
                 }
             })

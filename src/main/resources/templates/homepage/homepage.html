@@ -15,7 +15,15 @@
         </div>
         <!-- 头部区域（可配合layui 已有的水平导航） -->
         <ul class="layui-nav layui-layout-right layui-bg-black">
+
+            <li class="layui-show-md-inline-block" style="position:relative;top: 5px">
+                <a href="javascript:;" style="color: white">
+                    <span id="nowTime"></span>
+                </a>
+            </li>
+
             <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+
                 <a href="javascript:;">
                     <img id="personagePicture" src="/picture/picture.jpg" class="layui-nav-img">
                     <span id="userName">用户名</span>  |  <span id="idNumber">账号</span>
@@ -68,9 +76,9 @@
         </div>
     </div>
 
-    <!-- 内容主体区域 -->
+    <!-- 内容主体区域 scrolling=no:不使用生成下拉-->
     <div class="layui-body">
-      <iframe id="informationMain" src="" style="width: 99%;height: 99%"></iframe>
+        <iframe id="informationMain" src="" frameborder=0 style="width: 100%;height: 100%;"></iframe>
     </div>
 
     <!-- 底部固定区域 -->
@@ -81,6 +89,34 @@
 <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../layui/layui.js"></script>
 <script>
+
+    function timeStampString() {
+        var dateTime = new Date();
+        var show_day = ['星期一','星期二','星期三','星期四','星期五','星期六','星期日'];
+        var day = dateTime.getDay();
+        var year = dateTime.getFullYear();
+        var month = dateTime.getMonth() + 1 < 10 ? "0" + (dateTime.getMonth() + 1) : dateTime.getMonth() + 1;
+        var date = dateTime.getDate() < 10 ? "0" + dateTime.getDate() : dateTime.getDate();
+        var hour = dateTime.getHours() < 10 ? "0" + dateTime.getHours() : dateTime.getHours();
+        var minute = dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes();
+        var second = dateTime.getSeconds() < 10 ? "0" + dateTime.getSeconds() : dateTime.getSeconds();
+
+        if(day == 0){
+            // 周日
+            day = 7;
+        }
+
+        return  year + "年" + month + "月" + date + "日   " + hour + ":" + minute + ":" + second + "  " + show_day[day-1];
+    }
+
+    $(function () {
+        setInterval(function () {
+            var currentDateFormat = timeStampString();
+            $('#nowTime').text(currentDateFormat.toLocaleString())
+        },1000)
+    })
+
+
     // 回显账号信息
     $.ajax({
         type:"post",

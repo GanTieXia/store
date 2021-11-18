@@ -82,4 +82,14 @@ public class PageJumps {
     public String toCountPage(){
         return "/commodity/countPage";
     }
+
+    /**
+     * 测试前端效果界面
+     *
+     * @return
+     */
+    @RequestMapping("/toTestPage")
+    public String toTestPage(){
+        return "/login/TestPage";
+    }
 }
