@@ -1,10 +1,16 @@
 package com.gantiexia.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 /**
  * @author GanTieXia
@@ -12,6 +18,27 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Configuration
 public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    /**
+     * 创建一个持久化用户登录标记的Repository对象
+     * 此操作用redis不稳定，所以用JDBC。JdbcTokenRepositoryImpl是访问数据库的连接对象，需要提供数据库连接
+     *
+     * 所有被@Bean注解描述的方法，其参数，都是从Spring容器中获取。如果没有，抛出异常，如果对象不唯一，抛出异常
+     *
+     * @param dataSource
+     * @return
+     */
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(DataSource dataSource){
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setDataSource(dataSource);
+
+        // 设置启动的时候，创建表格。只有数据库中不存在的时候才创建
+        //jdbcTokenRepository.setCreateTableOnStartup(true);
+
+        return jdbcTokenRepository;
+    }
+
 
     /**
      * SpringSecurity拦截过滤器
@@ -53,11 +80,24 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/store/loginPage") // 退出后回到登录界面
                 .logoutUrl("/logout");
 
+        // remember-Me操作
+        http.rememberMe()
+                //.rememberMeParameter("") // 记住我参数名，默认是remember-me
+                .tokenValiditySeconds(60*60) // 设置记住我的时间，单位是秒，默认是7天
+                .tokenRepository(persistentTokenRepository)
+                .userDetailsService(userLoginService)
+        ;
+
         // 允许内部加载frame
         http.headers().frameOptions().sameOrigin();
 
-        // 关闭csrf安全协议，保证完整流程的使用
+        // 关闭csrf安全协议（跨站请求伪造），就是别的网站非法获取我们的cookie
         http.csrf().disable();
     }
+
+    @Autowired
+    private PersistentTokenRepository persistentTokenRepository;
+    @Autowired
+    private UserLoginServiceImpl userLoginService;
 
 }

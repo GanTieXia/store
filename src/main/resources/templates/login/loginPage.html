@@ -8,6 +8,9 @@
         .layui-progress-big{
             background-color: #9F9F9F;
         }
+        .layui-input-block .layui-form-checkbox span{
+            color: white;
+        }
     </style>
 </head>
 <body style="background-color: #2E2D3C">
@@ -38,9 +41,9 @@
 <!--    </div>-->
 
     <div id="loginDiv">
-        <div style="padding: 20px;background-color: #9F9F9F;width: 400px;height: 150px;margin-top: 15%;margin-left: 38%;border-radius: 20px">
+        <div style="padding: 20px;background-color: #9F9F9F;width: 400px;height: 193px;margin-top: 15%;margin-left: 38%;border-radius: 20px">
             <!-- 由SpringSecurity管理控制的登录-->
-            <form action="/loginSys" method="POST">
+            <form action="/loginSys" method="POST" class="layui-form">
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="color: white">账号：</label>
                     <div class="layui-input-inline">
@@ -53,6 +56,13 @@
                         <input type="password" id="password" name="password" autocomplete="off" class="layui-input">
                     </div>
                 </div>
+
+                <div class="layui-form-item" style="background-color: #9F9F9F">
+                    <div class="layui-input-block">
+                        <input type="checkbox" id="remember-me" name="remember-me" title="记住我" lay-skin="primary">
+                    </div>
+                </div>
+
                 <input type="submit" value="登录" class="layui-btn" style="position: relative;left: 130px">
             </form>
 
