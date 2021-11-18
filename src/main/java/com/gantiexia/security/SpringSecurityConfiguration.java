@@ -34,6 +34,8 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         jdbcTokenRepository.setDataSource(dataSource);
 
         // 设置启动的时候，创建表格。只有数据库中不存在的时候才创建
+        // 这里建表语句放进了sql文件，所以不需要执行
+        // 正常操作执行以后就删除这个建表语句
         //jdbcTokenRepository.setCreateTableOnStartup(true);
 
         return jdbcTokenRepository;
