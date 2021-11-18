@@ -50,7 +50,7 @@ CREATE TABLE `s_user`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of s_user
+-- Records of s_user  以此下用户登录，头像会展示不成功，因为你本地没有此头像文件
 -- ----------------------------
 INSERT INTO `s_user` VALUES (3, '肝铁侠', '0', '1234567@qq.com', '/storeProject/image/20211017/10000003.jpg', '10000003', '99f11d010f20a896fed5d0feeefe031c', '2021-10-17 20:01:46');
 INSERT INTO `s_user` VALUES (5, '蜘蛛侠', '0', '123456@qq.com', '/storeProject/image/20211017/10000004.png', '10000004', '2d44bbd0f0a3a35a384382fb1a6a1e0f', '2021-10-17 20:38:55');
