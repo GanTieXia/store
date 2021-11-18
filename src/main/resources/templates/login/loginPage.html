@@ -9,12 +9,17 @@
             background-color: #9F9F9F;
         }
         .layui-input-block .layui-form-checkbox span{
-            color: white;
+            color: black;
         }
 
+        body {
+            /* 设置背景颜色，背景图加载过程中会显示背景色 我试了下可加可不加 */
+            background: url("/picture/loginBackground.jpg");
+            background-size: 100%;
+        }
     </style>
 </head>
-<body style="background-color: #2E2D3C">
+<body style="background-color: white">
 <div>
 <!--    <div id="loginDiv">-->
 <!--        <div style="padding: 20px;background-color: #9F9F9F;width: 400px;height: 150px;margin-top: 15%;margin-left: 38%;border-radius: 20px">-->
@@ -42,18 +47,18 @@
 <!--    </div>-->
 
     <div id="loginDiv">
-        <div style="padding: 20px;background-color: #9F9F9F;width: 380px;height: 210px;margin-top: 15%;margin-left: 38%;border-radius: 20px">
+        <div style="padding: 20px;background-color:rgba(255,255,255,0.8);width: 380px;height: 210px;margin-top: 15%;margin-left: 38%;border-radius: 20px">
             <!-- 由SpringSecurity管理控制的登录-->
             <form action="/loginSys" method="POST" class="layui-form">
                 <div class="layui-form-item">
-                    <label class="layui-form-label" style="color: white">账号：</label>
+                    <label class="layui-form-label" style="color: black">账号：</label>
                     <div class="layui-input-inline">
                         <input type="text" required  lay-verify="required" id="idNumber" name="idNumber" autocomplete="off" class="layui-input">
                     </div>
                 </div>
 
                 <div class="layui-form-item">
-                    <label class="layui-form-label" style="color: white">密码：</label>
+                    <label class="layui-form-label" style="color: black">密码：</label>
                     <div class="layui-input-inline">
                         <input required  lay-verify="required" type="password" id="password" name="password" autocomplete="off" class="layui-input">
                     </div>
@@ -63,7 +68,7 @@
                        th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}">
                 </label>
 
-                <div class="layui-form-item" style="background-color: #9F9F9F">
+                <div class="layui-form-item">
                     <div class="layui-input-block">
                         <input type="checkbox" id="remember-me" name="remember-me" title="记住我" lay-skin="primary">
                     </div>
