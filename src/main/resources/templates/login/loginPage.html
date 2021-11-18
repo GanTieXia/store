@@ -21,31 +21,6 @@
 </head>
 <body style="background-color: white">
 <div>
-<!--    <div id="loginDiv">-->
-<!--        <div style="padding: 20px;background-color: #9F9F9F;width: 400px;height: 150px;margin-top: 15%;margin-left: 38%;border-radius: 20px">-->
-<!--            <div class="layui-form-item">-->
-<!--                <label class="layui-form-label" style="color: white">账号：</label>-->
-<!--                <div class="layui-input-inline">-->
-<!--                    <input type="tel" id="idNumber" name="idNumber" autocomplete="off" class="layui-input">-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="layui-form-item">-->
-<!--                <label class="layui-form-label" style="color: white">密码：</label>-->
-<!--                <div class="layui-input-inline">-->
-<!--                    <input type="password" id="password" name="password" autocomplete="off" class="layui-input">-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="layui-form-item">-->
-<!--                <a id="turnToRegisterPage">-->
-<!--                    <button id="goToRegister" class="layui-btn" style="position: relative;left: 120px">去注册</button>-->
-<!--                </a>-->
-<!--                <a id="turnToHomePage">-->
-<!--                    <button id="loginSystem" class="layui-btn" style="position: relative;left: 140px">登录</button>-->
-<!--                </a>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
     <div id="loginDiv">
         <div style="padding: 20px;background-color:rgba(255,255,255,0.8);width: 380px;height: 210px;margin-top: 15%;margin-left: 38%;border-radius: 20px">
             <!-- 由SpringSecurity管理控制的登录-->
@@ -74,14 +49,14 @@
                     </div>
                 </div>
 
-                <button class="layui-btn" lay-submit lay-filter="formDemo" style="position: relative;left: 125px">登录</button>
+                <button class="layui-btn" lay-submit lay-filter="formDemo" style="position: relative;left: 120px">登录</button>
 
 <!--                <input type="submit" value="登录" class="layui-btn" style="position: relative;left: 130px">-->
             </form>
 
             <!-- 显示注册模块按钮-->
             <a id="turnToRegisterPage">
-                <button id="goToRegister" class="layui-btn" style="position: relative;left: 205px;top: -38px">去注册</button>
+                <button id="goToRegister" class="layui-btn" style="position: relative;left: 200px;top: -38px">去注册</button>
             </a>
 
         </div>
@@ -89,29 +64,29 @@
 
     <!-- 注册模块-->
     <div class="layui-form" lay-filter="selFilter" style="display: none" id="registerDiv">
-        <div style="padding: 20px;background-color: #9F9F9F;width: 400px;height: 550px;margin-top: 5%;margin-left: 38%;border-radius: 20px">
+        <div style="padding: 20px;background-color:rgba(255,255,255,0.8);width: 400px;height: 550px;margin-top: 5%;margin-left: 38%;border-radius: 20px">
             <div class="layui-form-item">
-                <label class="layui-form-label" style="color: white;">账号：</label>
+                <label class="layui-form-label" style="color: black;">账号：</label>
                 <div class="layui-input-inline">
-                    <input type="tel" id="idNumberRegister" name="idNumber" style="background-color: #999999" readonly="true" autocomplete="off" class="layui-input">
+                    <input type="tel" id="idNumberRegister" name="idNumber" readonly="true" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label" style="color: white">密码：</label>
+                <label class="layui-form-label" style="color: black">密码：</label>
                 <div class="layui-input-inline">
                     <input type="password" id="passwordRegister" name="password" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" style="color: white">用户名：</label>
+                <label class="layui-form-label" style="color: black">用户名：</label>
                 <div class="layui-input-inline">
                     <input type="text" id="userName" name="password" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" style="color: white">性别：</label>
+                <label class="layui-form-label" style="color: black">性别：</label>
                 <div class="layui-input-inline">
                     <select name="sex" id="sex">
                         <!--首选：selected  禁选：disabled-->
@@ -123,7 +98,7 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" style="color: white">邮箱：</label>
+                <label class="layui-form-label" style="color: black">邮箱：</label>
                 <div class="layui-input-inline">
                     <input type="text" id="email" name="email" autocomplete="off" class="layui-input">
                 </div>
@@ -131,14 +106,14 @@
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" style="color: white">验证码：</label>
+                <label class="layui-form-label" style="color: black">验证码：</label>
                 <div class="layui-input-inline">
                     <input type="text" id="checkCode" name="password" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
             <div class="layui-form-item">
-                <label class="layui-form-label" style="color: white">头像：</label>
+                <label class="layui-form-label" style="color: black">头像：</label>
                 <button type="button" class="layui-btn layui-btn-sm" id="uploadPicture">上传图片</button>
             </div>
             <div class="layui-upload" style="position: relative;left: 110px">
