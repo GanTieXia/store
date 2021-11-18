@@ -58,10 +58,10 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         // 配置登录请求相关内容
         http.formLogin()
-                .usernameParameter("idNumber")
-                .passwordParameter("password")
+                .usernameParameter("idNumber") // 登录表单的账号name属性值，默认username。可自行通过此语句配置
+                .passwordParameter("password") // 登录表单的密码name属性值，默认password。可自行通过此语句配置
                 .loginPage("/store/loginPage") // 当用户未登录的时候默认跳转到登录界面
-                .loginProcessingUrl("/loginSys")
+                .loginProcessingUrl("/loginSys") // 对应登录表单上的action属性值
                 .defaultSuccessUrl("/store/homepage",true) // 登录成功后，响应重定向的位置
 
         ;
