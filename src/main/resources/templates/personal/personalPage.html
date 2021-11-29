@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+</head>
+<body>
+<div class="back">
+    <div style="width: 50%;float: left;">
+        <form class="layui-form" style="margin-top: 50px" th:object="${user}">
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" id="userName" name="userName" placeholder="最大输入长度为20" maxlength="20" required  lay-verify="required" autocomplete="off" class="layui-input" th:value="${user.userName}" >
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">账号</label>
+                <div class="layui-input-block">
+                    <input style="background-color: #9F9F9F" type="text" id="idNumber" name="idNumber" disabled="disabled" required  lay-verify="required" autocomplete="off" class="layui-input" th:value="${user.idNumber}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="sex" value="0" title="男" th:checked="${user.sex == '0'}">
+                    <input type="radio" name="sex" value="1" title="女" th:checked="${user.sex == '1'}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-block">
+                    <input type="text" name="email" placeholder="最大输入长度为30" maxlength="30" required  lay-verify="required" autocomplete="off" class="layui-input" th:value="${user.email}">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">个人简介</label>
+                <div class="layui-input-block">
+                    <textarea name="personBriefly" placeholder="最大输入长度为100" maxlength="100" class="layui-textarea" th:text="${user.personBriefly}"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" lay-submit lay-filter="updateInfo">提交修改</button>
+                    <button type="button" id="uploadPicture" class="layui-btn">更改头像</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+    <!--加载头像-->
+    <div style="float: left;width: 50%;margin-top: 50px;">
+        <div style="margin-top: 50px;">
+            <img id="personagePicture" th:src="${user.personagePicture}" style="width: 200px;height: 250px;position: relative;left: 215px">
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../layui/layui.js"></script>
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(updateInfo)', function(data){
+            var code = '';
+            $.ajax({
+                url:"/person/updatePersonInfo",
+                data:JSON.stringify( data.field),
+                dataType:'JSON',
+                contentType : "application/json",
+                type:'POST',
+                success :function (result) {
+                    if(result.code == '200'){
+                        layer.msg("更新个人信息成功");
+                    } else {
+                        layer.msg("更新个人信息失败，请联系管理员");
+                    }
+
+                }
+            })
+        });
+    });
+
+layui.use(['upload', 'element', 'layer'], function(){
+    var $ = layui.jquery
+        ,upload = layui.upload
+        ,element = layui.element
+        ,layer = layui.layer;
+
+    //  上传图片组件
+    var uploadInst = upload.render({
+        elem: '#uploadPicture'
+        ,url: '/login/layupload'
+        ,before: function(obj){
+            //预读本地文件示例，不支持ie8
+            obj.preview(function(index, file, result){
+                $('#personagePicture').attr('src', result); //图片链接（base64）
+            });
+
+            element.progress('demo', '0%'); //进度条复位
+            layer.msg('上传中', {icon: 16, time: 0});
+
+            // 参数
+            this.data.idNumber = $('#registerDiv #idNumberRegister').val();
+            this.data.userName = $('#registerDiv #userName').val();
+        }
+        ,done: function(res){
+            console.log(res)
+            //如果上传失败
+            if(res.code == '404'){
+                return layer.msg('上传失败');
+            }
+            //上传成功的一些操作
+            if(res.code == '200'){
+                return layer.msg('头像变更成功');
+            }
+
+            //置空上传失败的状态
+            $('#demoText').html('');
+        }
+        ,error: function(){
+            //演示失败状态，并实现重传
+            var demoText = $('#demoText');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function(){
+                uploadInst.upload();
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

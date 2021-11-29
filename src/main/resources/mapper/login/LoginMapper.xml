@@ -34,13 +34,23 @@
 
     <select id="getLoginUser" parameterType="java.lang.String" resultType="com.gantiexia.login.entity.User">
         select
+            id_number idNumber,
+            password password
+        from
+            s_user
+        where
+            id_number = #{idNumber}
+    </select>
+
+    <select id="getPersonInfo" parameterType="java.lang.String" resultType="com.gantiexia.login.entity.User">
+        select
             id id,
             user_name userName,
             sex sex,
             email email,
             personage_picture personagePicture,
             id_number idNumber,
-            password password,
+            person_briefly personBriefly,
             create_time createTime
         from
             s_user
@@ -71,6 +81,23 @@
             <if test="createTime != null">#{createTime},</if>
         </trim>
     </insert>
+
+    <update id="updatePersonPhoto" parameterType="com.gantiexia.login.entity.User">
+        update s_user set
+            personage_picture = #{personagePicture}
+        where
+            id_number = #{idNumber}
+    </update>
+
+    <update id="updatePersonInfo" parameterType="com.gantiexia.login.entity.User">
+        update s_user set
+            user_name = #{userName},
+            sex = #{sex},
+            person_briefly = #{personBriefly},
+            email = #{email}
+        where
+            id_number = #{idNumber}
+    </update>
 
     <select id="getNextIdNumber" resultType="java.lang.String">
         select max(id_number) from s_user

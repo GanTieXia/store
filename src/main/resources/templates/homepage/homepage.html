@@ -29,7 +29,7 @@
                     <span id="userName">用户名</span>  |  <span id="idNumber">账号</span>
                 </a>
                 <dl class="layui-nav-child">
-                    <dd><a href="">个人中心</a></dd>
+                    <dd><a id="personalPage">个人中心</a></dd>
                     <dd><a href="/store/loginPage">登录</a></dd>
                     <dd><a href="/logout">退出</a></dd>
                 </dl>
@@ -152,6 +152,11 @@
     // 点击关于杂货铺
     $('#aboutStore').click(function () {
         $('#informationMain').attr('src','/store/toAboutStorePage');
+    })
+
+    // 点击个人中心
+    $('#personalPage').click(function () {
+        $('#informationMain').attr('src','/store/personalPage');
     })
 </script>
 </body>

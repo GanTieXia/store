@@ -28,12 +28,20 @@ public interface UserService {
     String showUserMessage();
 
     /**
-     * 获取当前登录用户
+     * 获取当前登录用户校验密码
      *
      * @param idNumber
      * @return
      */
     User getLoginUser(String idNumber);
+
+    /**
+     * 个人中心信息
+     *
+     * @param idNumber
+     * @return
+     */
+    User getPersonInfo(String idNumber);
 
     /**
      * 邮箱验证码

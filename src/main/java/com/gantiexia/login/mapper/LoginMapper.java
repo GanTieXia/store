@@ -4,6 +4,7 @@ import com.gantiexia.login.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author GanTieXia
@@ -34,10 +35,32 @@ public interface LoginMapper {
     int register(User user);
 
     /**
-     * 获取当前登录用户
+     * 校验密码
      *
      * @param idNumber
      * @return
      */
     User getLoginUser(String idNumber);
+
+    /**
+     * 个人中心查询信息
+     *
+     * @param idNumber
+     * @return
+     */
+    User getPersonInfo(String idNumber);
+
+    /**
+     * 个人信息页面修改头像
+     * @param user
+     * @return
+     */
+    int updatePersonPhoto(User user);
+
+    /**
+     * 修改个人信息
+     * @param user
+     * @return
+     */
+    int updatePersonInfo(User user);
 }

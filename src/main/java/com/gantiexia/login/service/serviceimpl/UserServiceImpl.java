@@ -7,6 +7,7 @@ import com.gantiexia.login.entity.User;
 import com.gantiexia.login.mapper.LoginMapper;
 import com.gantiexia.login.service.UserService;
 import com.gantiexia.redis.RedisUtils;
+import com.mysql.cj.util.StringUtils;
 import io.netty.util.internal.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -111,6 +112,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getLoginUser(String idNumber) {
         return loginMapper.getLoginUser(idNumber);
+    }
+
+    /**
+     * 返回登陆人信息
+     *
+     * @param idNumber
+     * @return
+     */
+    @Override
+    public User getPersonInfo(String idNumber) {
+        return loginMapper.getPersonInfo(idNumber);
     }
 
     /**
@@ -225,9 +237,22 @@ public class UserServiceImpl implements UserService {
         String names = multipartFile.getOriginalFilename();
         // 文件扩展名
         String fileExt = names.substring(names.lastIndexOf(".") + 1).toLowerCase();
-
+        String newName = "";
         // 文件上传后的新名
-        String newName = user.getIdNumber() + "." + fileExt;
+        if(StringUtils.isNullOrEmpty(user.getIdNumber())){
+            newName = user.getIdNumber() + "." + fileExt;
+        } else {
+            String idNumber = SecurityContextHolder.getContext().getAuthentication().getName();
+            // 如果账号为空，就是修改头像。修改头像则从security中获取IdNumber
+            newName = idNumber + "." + fileExt;
+            // 再修改数据库中本人的头像路径
+            User userPram = new User();
+            userPram.setIdNumber(idNumber);
+            // 系统默认路径，可自己设置路径
+            userPram.setPersonagePicture("/storeProject/image/" + nowDay + "/" + newName);
+            loginMapper.updatePersonPhoto(userPram);
+        }
+
         fileName = newName;
         // 文件的绝对路径File
         File uploadFile = new File(uploadAbsolutePath + "/" + newName);

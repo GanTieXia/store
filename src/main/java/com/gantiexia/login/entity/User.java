@@ -23,6 +23,8 @@ public class User {
     private String personagePicture;
     /** 创建时间*/
     private Date createTime;
+    /** 个人简介*/
+    private String personBriefly;
 
     /** 验证码*/
     private String authCode;
@@ -97,6 +99,14 @@ public class User {
 
     public void setAuthCode(String authCode) {
         this.authCode = authCode;
+    }
+
+    public String getPersonBriefly() {
+        return personBriefly;
+    }
+
+    public void setPersonBriefly(String personBriefly) {
+        this.personBriefly = personBriefly;
     }
 
     @Override

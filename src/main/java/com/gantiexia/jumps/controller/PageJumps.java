@@ -1,12 +1,13 @@
 package com.gantiexia.jumps.controller;
 
 import com.gantiexia.count.service.CountService;
-import com.gantiexia.redis.RedisUtils;
+import com.gantiexia.login.entity.User;
+import com.gantiexia.login.mapper.LoginMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author GanTieXia
@@ -81,6 +82,21 @@ public class PageJumps {
     @RequestMapping("/countPage")
     public String toCountPage(){
         return "/commodity/countPage";
+    }
+
+    @Autowired
+    private LoginMapper loginMapper;
+
+    /**
+     * 个人主页
+     *
+     * @return
+     */
+    @RequestMapping("/personalPage")
+    public String toPersonalPage(ModelMap mmap){
+        User user = loginMapper.getPersonInfo(SecurityContextHolder.getContext().getAuthentication().getName());
+        mmap.put("user",user);
+        return "/personal/personalPage";
     }
 
     /**

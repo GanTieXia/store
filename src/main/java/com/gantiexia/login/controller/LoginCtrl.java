@@ -45,7 +45,7 @@ public class LoginCtrl {
     @ResponseBody
     public User getLoginUser(){
         String idNumber = userService.showUserMessage();
-        return userService.getLoginUser(idNumber);
+        return userService.getPersonInfo(idNumber);
     }
 
     /**
