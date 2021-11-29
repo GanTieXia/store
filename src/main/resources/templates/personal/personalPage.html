@@ -46,7 +46,7 @@
             </div>
 
             <div class="layui-form-item">
-                <div class="layui-input-block">
+                <div class="layui-input-block" style="position: relative;left: 450px;margin-top: 70px">
                     <button type="button" class="layui-btn" lay-submit lay-filter="updateInfo">提交修改</button>
                     <button type="button" id="uploadPicture" class="layui-btn">更改头像</button>
                 </div>
@@ -56,7 +56,7 @@
     </div>
 
     <!--加载头像-->
-    <div style="float: left;width: 50%;margin-top: 50px;">
+    <div style="float: left;width: 50%;margin-top: 50px;background-color:rgba(255,255,255,0.8);">
         <div style="margin-top: 50px;">
             <img id="personagePicture" th:src="${user.personagePicture}" style="width: 200px;height: 250px;position: relative;left: 215px">
         </div>
