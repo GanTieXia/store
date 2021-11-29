@@ -93,9 +93,9 @@ public class PageJumps {
      * @return
      */
     @RequestMapping("/personalPage")
-    public String toPersonalPage(ModelMap mmap){
+    public String toPersonalPage(ModelMap map){
         User user = loginMapper.getPersonInfo(SecurityContextHolder.getContext().getAuthentication().getName());
-        mmap.put("user",user);
+        map.put("user",user);
         return "/personal/personalPage";
     }
 
