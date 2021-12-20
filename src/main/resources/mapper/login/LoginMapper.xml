@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.gantiexia.login.mapper.LoginMapper">
+<mapper namespace="com.gantiexia.userManage.mapper.LoginMapper">
 
-    <resultMap type="com.gantiexia.login.mapper.LoginMapper" id="LoginResult">
+    <resultMap type="com.gantiexia.userManage.mapper.LoginMapper" id="LoginResult">
         <result property="id"    column="id"    />
         <result property="user_name"    column="userName"    />
         <result property="sex"    column="sex"    />
@@ -12,10 +12,11 @@
         <result property="personage_picture"    column="personagePicture"    />
         <result property="id_number"    column="idNumber"    />
         <result property="password"    column="password"    />
+        <result property="is_onuse"    column="isOnUse"    />
         <result property="create_time"    column="crateTime"    />
     </resultMap>
 
-    <select id="getUserMessage" parameterType="com.gantiexia.login.entity.User" resultType="com.gantiexia.login.entity.User">
+    <select id="getUserMessage" parameterType="com.gantiexia.userManage.entity.User" resultType="com.gantiexia.userManage.entity.User">
         select
             id id,
             user_name userName,
@@ -24,7 +25,8 @@
             personage_picture personagePicture,
             id_number idNumber,
             password password,
-            create_time createTime
+            person_briefly personBriefly,
+            DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') createTimeText
         from
             s_user
         <where>
@@ -32,17 +34,67 @@
         </where>
     </select>
 
-    <select id="getLoginUser" parameterType="java.lang.String" resultType="com.gantiexia.login.entity.User">
+    <select id="getUserMessageList" parameterType="java.util.HashMap" resultType="com.gantiexia.userManage.entity.User">
+        select
+        id id,
+        user_name userName,
+        sex sex,
+        email email,
+        personage_picture personagePicture,
+        id_number idNumber,
+        password password,
+        person_briefly personBriefly,
+        DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') createTimeText,
+        is_onuse isOnUse
+        from
+        s_user
+        where 1=1
+        <if test="userName != null and userName != ''">
+            and user_name like replace('%${userName}%',' ','')
+        </if>
+        <if test="idNumber != null and idNumber != ''">
+            and id_number = #{idNumber}
+        </if>
+        limit #{page},#{limit}
+    </select>
+
+    <select id="getUserMessageListCount" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+        select count(*) from(
+            select
+            id id,
+            user_name userName,
+            sex sex,
+            email email,
+            personage_picture personagePicture,
+            id_number idNumber,
+            password password,
+            person_briefly personBriefly,
+            DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') createTimeText,
+            is_onuse isOnUse
+            from
+            s_user
+            where 1=1
+            <if test="userName != null and userName != ''">
+                and user_name like replace('%${userName}%',' ','')
+            </if>
+            <if test="idNumber != null and idNumber != ''">
+                and id_number = #{idNumber}
+            </if>
+        ) s
+    </select>
+
+    <select id="getLoginUser" parameterType="java.lang.String" resultType="com.gantiexia.userManage.entity.User">
         select
             id_number idNumber,
-            password password
+            password password,
+            is_onuse isOnUse
         from
             s_user
         where
             id_number = #{idNumber}
     </select>
 
-    <select id="getPersonInfo" parameterType="java.lang.String" resultType="com.gantiexia.login.entity.User">
+    <select id="getPersonInfo" parameterType="java.lang.String" resultType="com.gantiexia.userManage.entity.User">
         select
             id id,
             user_name userName,
@@ -58,7 +110,7 @@
             id_number = #{idNumber}
     </select>
 
-    <insert id="register" parameterType="com.gantiexia.login.entity.User">
+    <insert id="register" parameterType="com.gantiexia.userManage.entity.User">
         insert into s_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -82,14 +134,14 @@
         </trim>
     </insert>
 
-    <update id="updatePersonPhoto" parameterType="com.gantiexia.login.entity.User">
+    <update id="updatePersonPhoto" parameterType="com.gantiexia.userManage.entity.User">
         update s_user set
             personage_picture = #{personagePicture}
         where
             id_number = #{idNumber}
     </update>
 
-    <update id="updatePersonInfo" parameterType="com.gantiexia.login.entity.User">
+    <update id="updatePersonInfo" parameterType="com.gantiexia.userManage.entity.User">
         update s_user set
             user_name = #{userName},
             sex = #{sex},
@@ -102,5 +154,23 @@
     <select id="getNextIdNumber" resultType="java.lang.String">
         select max(id_number) from s_user
     </select>
+
+    <delete id="delUser" parameterType="java.lang.String">
+        delete from s_user where id = #{id}
+    </delete>
+
+    <update id="updateIsOnUse" parameterType="java.lang.String">
+        update s_user set
+            is_onuse = '1'
+        where
+            id = #{id}
+    </update>
+
+    <update id="updateOnUse" parameterType="java.lang.String">
+        update s_user set
+            is_onuse = '0'
+        where
+            id = #{id}
+    </update>
 
 </mapper>

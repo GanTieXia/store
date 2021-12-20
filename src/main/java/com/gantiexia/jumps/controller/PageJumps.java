@@ -1,8 +1,8 @@
 package com.gantiexia.jumps.controller;
 
 import com.gantiexia.count.service.CountService;
-import com.gantiexia.login.entity.User;
-import com.gantiexia.login.mapper.LoginMapper;
+import com.gantiexia.userManage.entity.User;
+import com.gantiexia.userManage.mapper.LoginMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -19,6 +19,8 @@ public class PageJumps {
 
     @Autowired
     private CountService countService;
+    @Autowired
+    private LoginMapper loginMapper;
 
     /**
      * 跳转主页
@@ -84,9 +86,6 @@ public class PageJumps {
         return "/commodity/countPage";
     }
 
-    @Autowired
-    private LoginMapper loginMapper;
-
     /**
      * 个人主页
      *
@@ -100,12 +99,22 @@ public class PageJumps {
     }
 
     /**
+     * 个人主页
+     *
+     * @return
+     */
+    @RequestMapping("/userManage")
+    public String toUserManage(){
+        return "/system/userManage";
+    }
+
+    /**
      * 测试前端效果界面
      *
      * @return
      */
     @RequestMapping("/toTestPage")
     public String toTestPage(){
-        return "/login/TestPage";
+        return "/test/index";
     }
 }

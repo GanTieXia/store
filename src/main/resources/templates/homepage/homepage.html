@@ -46,6 +46,16 @@
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-bg-black layui-nav-tree"  lay-filter="test">
+
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">系统管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a>角色管理</a></dd>
+                        <dd><a id="userManage">用户管理</a></dd>
+                        <dd><a>在线用户</a></dd>
+                    </dl>
+                </li>
+
                 <li class="layui-nav-item">
                     <a class="" href="javascript:;">商品分类</a>
                     <dl class="layui-nav-child">
@@ -142,6 +152,11 @@
     // 点击手机的时候
     $('#telPhone').click(function () {
         $('#informationMain').attr('src','/store/toCommodityPage');
+    })
+
+    // 点击用户管理
+    $('#userManage').click(function () {
+        $('#informationMain').attr('src','/store/userManage');
     })
 
     // 点击上架商品

@@ -1,8 +1,8 @@
-package com.gantiexia.login.controller;
+package com.gantiexia.userManage.controller;
 
 import com.gantiexia.authcode.entity.AuthCode;
-import com.gantiexia.login.entity.User;
-import com.gantiexia.login.service.UserService;
+import com.gantiexia.userManage.entity.User;
+import com.gantiexia.userManage.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -92,5 +91,49 @@ public class LoginCtrl {
     @ResponseBody
     public Map<String,String> register(User user){
         return userService.register(user);
+    }
+
+    /**
+     * 用户数据
+     *
+     * @return
+     */
+    @RequestMapping("/userMessageList")
+    @ResponseBody
+    public Map<String,Object> userMessageList(User user,@RequestParam int page,@RequestParam int limit){
+        return userService.getUserMessageList(user,page,limit);
+    }
+
+    /**
+     * 删除用户
+     *
+     * @return
+     */
+    @RequestMapping("/delUser")
+    @ResponseBody
+    public Map<String,String> delUser(User user){
+        return userService.delUser(user);
+    }
+
+    /**
+     * 禁用用户
+     *
+     * @return
+     */
+    @RequestMapping("/updateIsOnUse")
+    @ResponseBody
+    public Map<String,String> updateIsOnUse(User user){
+        return userService.updateIsOnUse(user);
+    }
+
+    /**
+     * 解除禁用
+     *
+     * @return
+     */
+    @RequestMapping("/updateOnUse")
+    @ResponseBody
+    public Map<String,String> updateOnUse(User user){
+        return userService.updateOnUse(user);
     }
 }

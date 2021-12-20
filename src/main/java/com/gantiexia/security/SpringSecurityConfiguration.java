@@ -19,6 +19,11 @@ import javax.sql.DataSource;
 @Configuration
 public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private PersistentTokenRepository persistentTokenRepository;
+    @Autowired
+    private UserLoginServiceImpl userLoginService;
+
     /**
      * 创建一个持久化用户登录标记的Repository对象
      * 此操作用redis不稳定，所以用JDBC。JdbcTokenRepositoryImpl是访问数据库的连接对象，需要提供数据库连接
@@ -96,10 +101,5 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // 关闭csrf安全协议（跨站请求伪造），就是别的网站非法获取我们的cookie
         http.csrf().disable();
     }
-
-    @Autowired
-    private PersistentTokenRepository persistentTokenRepository;
-    @Autowired
-    private UserLoginServiceImpl userLoginService;
 
 }

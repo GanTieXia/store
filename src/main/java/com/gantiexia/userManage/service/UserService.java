@@ -1,7 +1,7 @@
-package com.gantiexia.login.service;
+package com.gantiexia.userManage.service;
 
 import com.gantiexia.authcode.entity.AuthCode;
-import com.gantiexia.login.entity.User;
+import com.gantiexia.userManage.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -73,4 +73,33 @@ public interface UserService {
      * @return
      */
     Map<String,String> register(User user);
+
+    /**
+     * 核对登录密码
+     * @param user
+     * @return
+     */
+    Map<String,Object> getUserMessageList(User user,int page,int limit);
+
+    /**
+     * 删除用户
+     * @param user
+     * @return
+     */
+    Map<String,String> delUser(User user);
+
+    /**
+     * 禁用用户
+     * @param user
+     * @return
+     */
+    Map<String,String> updateIsOnUse(User user);
+
+    /**
+     * 解除禁用
+     *
+     * @param user
+     * @return
+     */
+    Map<String,String> updateOnUse(User user);
 }

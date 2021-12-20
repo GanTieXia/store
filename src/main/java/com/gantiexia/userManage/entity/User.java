@@ -1,4 +1,4 @@
-package com.gantiexia.login.entity;
+package com.gantiexia.userManage.entity;
 
 import java.util.Date;
 
@@ -23,11 +23,22 @@ public class User {
     private String personagePicture;
     /** 创建时间*/
     private Date createTime;
+    private String createTimeText;
     /** 个人简介*/
     private String personBriefly;
+    /** 是否禁用*/
+    private String isOnUse;
 
     /** 验证码*/
     private String authCode;
+
+    public String getCreateTimeText() {
+        return createTimeText;
+    }
+
+    public void setCreateTimeText(String createTimeText) {
+        this.createTimeText = createTimeText;
+    }
 
     public String getId() {
         return id;
@@ -109,6 +120,14 @@ public class User {
         this.personBriefly = personBriefly;
     }
 
+    public String getIsOnUse() {
+        return isOnUse;
+    }
+
+    public void setIsOnUse(String isOnUse) {
+        this.isOnUse = isOnUse;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -120,6 +139,9 @@ public class User {
                 ", sex='" + sex + '\'' +
                 ", personagePicture='" + personagePicture + '\'' +
                 ", createTime=" + createTime +
+                ", createTimeText='" + createTimeText + '\'' +
+                ", personBriefly='" + personBriefly + '\'' +
+                ", isOnUse='" + isOnUse + '\'' +
                 ", authCode='" + authCode + '\'' +
                 '}';
     }

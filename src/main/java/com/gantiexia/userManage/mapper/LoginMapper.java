@@ -1,6 +1,6 @@
-package com.gantiexia.login.mapper;
+package com.gantiexia.userManage.mapper;
 
-import com.gantiexia.login.entity.User;
+import com.gantiexia.userManage.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -20,11 +20,49 @@ public interface LoginMapper {
     List<User> getUserMessage(User user);
 
     /**
+     * 查询用户表
+     *
+     * @param map
+     * @return
+     */
+    List<User> getUserMessageList(Map<String,Object> map);
+
+    /**
+     * 查询用户表数量
+     * @param map
+     * @return
+     */
+    int getUserMessageListCount(Map<String,Object> map);
+
+    /**
      * 填充注册账号输入框
      *
      * @return
      */
     String getNextIdNumber();
+
+    /**
+     * 删除用户
+     * @param id
+     * @return
+     */
+    int delUser(String id);
+
+    /**
+     * 禁用用户
+     *
+     * @param id
+     * @return
+     */
+    int updateIsOnUse(String id);
+
+    /**
+     * 解除禁用
+     *
+     * @param id
+     * @return
+     */
+    int updateOnUse(String id);
 
     /**
      * 注册

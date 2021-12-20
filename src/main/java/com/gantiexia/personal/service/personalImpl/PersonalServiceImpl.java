@@ -1,11 +1,9 @@
 package com.gantiexia.personal.service.personalImpl;
 
-import com.gantiexia.login.entity.User;
-import com.gantiexia.login.mapper.LoginMapper;
+import com.gantiexia.userManage.entity.User;
+import com.gantiexia.userManage.mapper.LoginMapper;
 import com.gantiexia.personal.service.PersonalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

@@ -1,18 +1,17 @@
-package com.gantiexia.login.service.serviceimpl;
+package com.gantiexia.userManage.service.serviceimpl;
 
 import cn.hutool.extra.mail.MailUtil;
 import com.gantiexia.authcode.entity.AuthCode;
 import com.gantiexia.authcode.mapper.AuthCodeMapper;
-import com.gantiexia.login.entity.User;
-import com.gantiexia.login.mapper.LoginMapper;
-import com.gantiexia.login.service.UserService;
+import com.gantiexia.userManage.entity.User;
+import com.gantiexia.userManage.mapper.LoginMapper;
+import com.gantiexia.userManage.service.UserService;
 import com.gantiexia.redis.RedisUtils;
 import com.mysql.cj.util.StringUtils;
 import io.netty.util.internal.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -26,7 +25,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 /**
  * @author GanTieXia
@@ -65,13 +63,20 @@ public class UserServiceImpl implements UserService {
         // 查询出系统此账号的账号信息
         List<User> userSysList = loginMapper.getUserMessage(user);
 
+        User userSys = userSysList.get(0);
+
+        // 被禁用的用户
+        if(userSys.getIsOnUse().equals("1")){
+            map.put("code","505");
+            map.put("message","此用户已被禁用");
+            return map;
+        }
+
         if(userSysList.size() == 0){
             map.put("code","404");
             map.put("message","此用户不存在");
             return map;
         }
-
-        User userSys = userSysList.get(0);
 
         // 如果系统中的密码与输入的密码不相等
         if(userSys != null){
@@ -364,5 +369,81 @@ public class UserServiceImpl implements UserService {
             map.put("message","验证码错误");
             return map;
         }
+    }
+
+    /**
+     * 用户表查询
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    public Map<String,Object> getUserMessageList(User user,int page,int limit) {
+        // 查询参数
+        Map<String,Object> map = new HashMap<>();
+        map.put("userName",user.getUserName());
+        map.put("idNumber",user.getIdNumber());
+        map.put("page",(page-1)*limit);
+        map.put("limit",limit);
+
+        Map<String,Object> mapResult = new HashMap<>();
+        mapResult.put("code","0");
+        mapResult.put("message","操作成功");
+        mapResult.put("data",loginMapper.getUserMessageList(map));
+        mapResult.put("count",loginMapper.getUserMessageListCount(map));
+
+        return mapResult;
+    }
+
+    /**
+     * 删除用户
+     * @param user
+     * @return
+     */
+    @Override
+    public Map<String, String> delUser(User user) {
+        int n = loginMapper.delUser(user.getId());
+        return resultMap(n);
+    }
+
+    /**
+     * 禁用用户
+     * @param user
+     * @return
+     */
+    @Override
+    public Map<String, String> updateIsOnUse(User user) {
+        int n = loginMapper.updateIsOnUse(user.getId());
+        return resultMap(n);
+    }
+
+    /**
+     * 解除禁用
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    public Map<String, String> updateOnUse(User user) {
+        int n = loginMapper.updateOnUse(user.getId());
+        return resultMap(n);
+    }
+
+    /**
+     * 返回结果集 -- 公共方法
+     *
+     * @param n
+     * @return
+     */
+    public Map<String,String> resultMap(int n){
+        Map<String,String> map = new HashMap<>();
+        if(n == 1){
+            map.put("code","200");
+            map.put("message","操作成功！");
+        } else {
+            map.put("code","404");
+            map.put("message","操作失败！");
+        }
+        return map;
     }
 }

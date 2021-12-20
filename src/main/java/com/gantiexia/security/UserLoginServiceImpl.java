@@ -1,8 +1,9 @@
 package com.gantiexia.security;
 
-import com.gantiexia.login.entity.User;
-import com.gantiexia.login.mapper.LoginMapper;
+import com.gantiexia.userManage.entity.User;
+import com.gantiexia.userManage.mapper.LoginMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,7 +30,14 @@ public class UserLoginServiceImpl implements UserDetailsService {
         User userSys = loginMapper.getLoginUser(username);
 
         if(userSys == null){
-            throw new UsernameNotFoundException("此用户不存在");
+            // 错误回显信息
+            throw new BadCredentialsException("此用户不存在！");
+        }
+
+        if(userSys.getIsOnUse().equals("1")){
+            //throw new UsernameNotFoundException("此用户已被禁用！");
+            // 错误回显信息
+            throw new BadCredentialsException("此用户已被禁用！");
         }
 
         org.springframework.security.core.userdetails.User result =

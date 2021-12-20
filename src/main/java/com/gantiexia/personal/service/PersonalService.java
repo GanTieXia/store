@@ -1,6 +1,6 @@
 package com.gantiexia.personal.service;
 
-import com.gantiexia.login.entity.User;
+import com.gantiexia.userManage.entity.User;
 
 import java.util.Map;
 

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <style>
+        body{margin: 10px;}
+        .demo-carousel{height: 200px; line-height: 200px; text-align: center;}
+    </style>
+</head>
+<body>
+<div style="margin-bottom: 5px;margin-top: 10px;border:1px;">
+
+    <div class="layui-inline">
+        <label class="layui-form-label">用户名：</label>
+        <div class="layui-input-inline">
+            <input type="text" id="userName" name="userName" lay-verify="required|phone" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-inline">
+        <label class="layui-form-label">账号：</label>
+        <div class="layui-input-inline">
+            <input type="text" id="idNumber" name="idNumber" lay-verify="required|phone" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <button type="button" id="searchBtn" class="layui-btn" style="position: relative;left: 2%">查询</button>
+
+</div>
+
+<div >
+    <table class="layui-hide" id="demo" lay-filter="Operate"></table>
+</div>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">禁用 / 解除禁用</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" id="del" lay-event="del">删除</a>
+</script>
+
+<script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../layui/layui.js"></script>
+<script>
+
+    layui.use(function(){
+
+        //得到各种内置组件
+        var layer = layui.layer //弹层
+            ,laypage = layui.laypage //分页
+            ,laydate = layui.laydate //日期
+            ,table = layui.table //表格
+            ,carousel = layui.carousel //轮播
+            ,upload = layui.upload //上传
+            ,element = layui.element //元素操作
+            ,slider = layui.slider //滑块
+            ,dropdown = layui.dropdown //下拉菜单
+
+        //第一个实例
+        table.render({
+            elem: '#demo'
+            ,height: 550
+            ,url: '../login/userMessageList'
+            ,page: true
+            ,cols: [
+                 [
+                    {field: 'userName', title: '用户名', align:'center', width:120}
+                    ,{field: 'sex', title: '性别', align:'center', width:80, templet : function (d){
+                         if(d.sex == 0){
+                             return '<span style="color: #18A4D0;">男</span>';
+                         }else if(d.sex == 1){
+                             return '<span style="color: #D03948;">女</span>';
+                         }}
+                    }
+                    ,{field: 'email', title: '邮箱', align:'center', width:180}
+                    ,{field: 'idNumber', title: '账号', align:'center', width: 120}
+                    ,{field: 'personBriefly', title: '个人简介', align:'center', width: 260}
+                    ,{field: 'createTimeText', title: '创建时间', align:'center', width: 210, sort: true}
+                     ,{field: 'isOnUse', title: '是否禁用', align:'center', width: 100,templet : function (d){
+                         if(d.isOnUse == 0){
+                             return '<span>否</span>';
+                         }else if(d.isOnUse == 1){
+                             return '<span style="color: red;">是</span>';
+                         }}
+                     }
+                    , { fixed: 'right', title: '操作', align:'center',toolbar: '#barDemo', width: 220 }
+                 ]
+            ]
+            ,limits: [5,10,20]
+            ,limit: 10
+        });
+
+        //监听行工具事件
+        table.on('tool(Operate)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                ,layEvent = obj.event; //获得 lay-event 对应的值
+            if(layEvent === 'edit'){
+                layer.confirm('确认禁用/解除禁用此用户吗?', function(index){
+                    if(data.isOnUse == '0'){
+                        // 禁用
+                        $.ajax({
+                            type:"post",
+                            url : "/login/updateIsOnUse",
+                            async:false,
+                            data : {
+                                id : data.id
+                            },
+                            success:function (data) {
+                                if(data.code == '200'){
+                                    layer.msg('禁用成功！', {
+                                        // 1s后自动关闭
+                                        time: 1000,
+                                    });
+                                    table.reload('demo');
+                                } else if (data.code == '404'){
+                                    layer.msg('禁用失败！', {
+                                        // 1s后自动关闭
+                                        time: 1000,
+                                    });
+                                }
+                            }
+                        })
+                    } else if(data.isOnUse == '1'){
+                        // 解除禁用
+                        $.ajax({
+                            type:"post",
+                            url : "/login/updateOnUse",
+                            async:false,
+                            data : {
+                                id : data.id
+                            },
+                            success:function (data) {
+                                if(data.code == '200'){
+                                    layer.msg('解禁成功！', {
+                                        // 1s后自动关闭
+                                        time: 1000,
+                                    });
+                                    table.reload('demo');
+                                } else if (data.code == '404'){
+                                    layer.msg('解禁失败！', {
+                                        // 1s后自动关闭
+                                        time: 1000,
+                                    });
+                                }
+                            }
+                        })
+                    }
+
+                })
+            } else if(layEvent === 'del'){
+                layer.confirm('确认删除此用户吗?', function(index){
+                    $.ajax({
+                        type:"post",
+                        url : "/login/delUser",
+                        async:false,
+                        data : {
+                            id : data.id
+                        },
+                        success:function (data) {
+                            if(data.code == '200'){
+                                layer.msg('操作成功！', {
+                                    // 1s后自动关闭
+                                    time: 1000,
+                                });
+                                table.reload('demo');
+                            } else if (data.code == '404'){
+                                layer.msg('操作失败！', {
+                                    // 1s后自动关闭
+                                    time: 1000,
+                                });
+                            }
+                        }
+                    })
+                })
+            }
+        });
+
+        // 查询方法
+        $('#searchBtn').click(function () {
+            // 姓名
+            var userName = $('#userName').val();
+            // 账号
+            var idNumber = $('#idNumber').val();
+
+            table.reload('demo',{
+                where : {userName : userName, idNumber : idNumber}
+            })
+        })
+    });
+
+</script>
+
+</body>
+</html>

@@ -2,14 +2,12 @@ package com.gantiexia.count.controller;
 
 import com.gantiexia.count.entity.Count;
 import com.gantiexia.count.service.CountService;
-import com.gantiexia.login.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 平台主页统计
