@@ -18,6 +18,8 @@ MyBatis
 
 Redis
 
+MQ
+
 jQuery
 
 Apache ECharts
