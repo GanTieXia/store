@@ -48,4 +48,14 @@ public class Count {
     public void setCountTimeText(String countTimeText) {
         this.countTimeText = countTimeText;
     }
+
+    @Override
+    public String toString() {
+        return "Count{" +
+                "id='" + id + '\'' +
+                ", visit='" + visit + '\'' +
+                ", countTime=" + countTime +
+                ", countTimeText='" + countTimeText + '\'' +
+                '}';
+    }
 }

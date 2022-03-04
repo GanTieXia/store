@@ -76,6 +76,7 @@ public interface UserService {
 
     /**
      * 核对登录密码
+     *
      * @param user
      * @return
      */
@@ -83,6 +84,7 @@ public interface UserService {
 
     /**
      * 删除用户
+     *
      * @param user
      * @return
      */
@@ -90,6 +92,7 @@ public interface UserService {
 
     /**
      * 禁用用户
+     *
      * @param user
      * @return
      */

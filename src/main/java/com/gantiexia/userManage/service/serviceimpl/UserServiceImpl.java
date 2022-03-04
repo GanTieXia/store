@@ -7,7 +7,6 @@ import com.gantiexia.userManage.entity.User;
 import com.gantiexia.userManage.mapper.LoginMapper;
 import com.gantiexia.userManage.service.UserService;
 import com.gantiexia.redis.RedisUtils;
-import com.mysql.cj.util.StringUtils;
 import io.netty.util.internal.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -162,24 +163,21 @@ public class UserServiceImpl implements UserService {
     public Map<String,String> checkCode(AuthCode authCode) {
         // 验证码发送结果状态回显
         Map<String,String> map = new HashMap<>();
-
+        // 生成6位随机邮件验证码
         StringBuffer authCodes = new StringBuffer();
         for(int j = 0; j< 6; j++){
             authCodes.append((int)((Math.random()*10)))  ;
         }
-
-        // 如果验证码不存在，则存入。如果验证码存在，则提示验证码已经发送
-        System.out.println(redisUtils.get(authCode.getEmail()));
-
+        // 将验证码发送至redis
         if(StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
-            // 将验证码放入redis,失效时间为60s
+            // 将验证码放入redis,失效时间为180s
             redisUtils.setKeyTimeOut(authCode.getEmail(),String.valueOf(authCodes),180, TimeUnit.SECONDS);
+            logger.info("验证码发送至redis，验证码："+redisUtils.get(authCode.getEmail()));
         } else if(!StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
             map.put("code","500");
             map.put("message","已发送验证码，请勿重复发送");
             return map;
         }
-
         // 每个邮箱只能绑定一个用户
         User user = new User();
         List<User> userList = loginMapper.getUserMessage(user);
@@ -197,12 +195,11 @@ public class UserServiceImpl implements UserService {
             map.put("message","此邮箱已被绑定");
             return map;
         }
-
         // 如果成功走到这里，发送邮件
         map.put("code","200");
         map.put("message","验证码发送成功");
         // 当验证码生成成功时才发送验证码
-        MailUtil.send(authCode.getEmail(), "Yours杂货铺", "欢迎您的注册！<br>您的注册验证码为:<label style=\"color: red\">"+authCodes+"</label>" +
+        MailUtil.send(authCode.getEmail(), "您的注册信息", "欢迎您的注册！<br>您的注册验证码为:<label style=\"color: red\">"+authCodes+"</label>" +
                 "<br>请妥善保管，防止丢失！<br>如不是您本人操作，请忽略！", true);
         return map;
     }
@@ -220,22 +217,22 @@ public class UserServiceImpl implements UserService {
         Map<String,String> map = new HashMap<>();
 
         // 此行改为所在工程的对应的上传物理路径
-        String uploadAbsolutePath = "D:///storeProject//image";
+        String uploadAbsolutePath = "/storeProject/image";
         // 在对应的image包下按照图片生成日期进行分包
         Date date = new Date();
         // 转换成时间字符串
         SimpleDateFormat sdl = new SimpleDateFormat("yyyyMMdd");
         String nowDay = sdl.format(date);
         // 再将本地路径字符串拼接
-        uploadAbsolutePath += "//" + nowDay;
+        uploadAbsolutePath += "/" + nowDay;
         // 将我们想要保存的路径创建到本地
         File file = new File(uploadAbsolutePath);
+        file.setWritable(true, false);
 
-        // 如果文件夹不存在
-        if (!file.exists() && !file.mkdirs()) {
-            map.put("code","404");
-            map.put("message","文件上传路径不存在");
-            return map;
+        // 如果文件夹不存在就创建文件夹
+        if (!file.exists()) {
+            file.mkdirs();
+            logger.info("文件夹创建成功...");
         }
 
         //原文件名
@@ -244,7 +241,7 @@ public class UserServiceImpl implements UserService {
         String fileExt = names.substring(names.lastIndexOf(".") + 1).toLowerCase();
         String newName = "";
         // 文件上传后的新名
-        if(StringUtils.isNullOrEmpty(user.getIdNumber())){
+        if(user.getIdNumber() != null){
             newName = user.getIdNumber() + "." + fileExt;
         } else {
             String idNumber = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -266,12 +263,11 @@ public class UserServiceImpl implements UserService {
         try {
             // 将上传的保存到本地指定路径
             FileCopyUtils.copy(multipartFile.getInputStream(), new FileOutputStream(uploadFile));
-        } catch (IOException ioException) {
+            logger.info("图片保存成功！");
+        } catch (Exception e) {
             // IOException代表文件上传的时候出错
             logger.info("图片保存到文件夹中出错！");
-        } catch (Exception e) {
-            // Exception代表方法出错
-            logger.info("文件没有复制到指定的目录下");
+            logger.info(e);
         }
 
         map.put("code","200");
@@ -309,6 +305,8 @@ public class UserServiceImpl implements UserService {
         user.setPersonagePicture(personagePicture);
         // 设置系统时间
         user.setCreateTime(date);
+        // 默认有效
+        user.setIsOnUse("0");
 
         // 从redis中取得验证码
         String authCode = redisUtils.get(user.getEmail());
@@ -342,7 +340,6 @@ public class UserServiceImpl implements UserService {
             logger.info("密码加密失败...");
             e.printStackTrace();
         }
-
 
         // 如果缓存中的验证码与传回来的验证码相等，执行插入，完成注册
         if(authCode.equals(user.getAuthCode())){

@@ -37,7 +37,7 @@ public class UserLoginServiceImpl implements UserDetailsService {
         if(userSys.getIsOnUse().equals("1")){
             //throw new UsernameNotFoundException("此用户已被禁用！");
             // 错误回显信息
-            throw new BadCredentialsException("此用户已被禁用！");
+            throw new BadCredentialsException("此用户已被禁用！请联系管理员...");
         }
 
         org.springframework.security.core.userdetails.User result =

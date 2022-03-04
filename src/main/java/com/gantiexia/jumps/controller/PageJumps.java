@@ -31,9 +31,8 @@ public class PageJumps {
     public String toHomepage(){
         // 记录访问量信息，没访问一次这个网址，访问量增加1
         countService.insertCountVisit();
-
         // 跳转页面
-        return "/homepage/homepage";
+        return "homepage/homepage";
     }
 
     /**
@@ -43,7 +42,7 @@ public class PageJumps {
      */
     @RequestMapping("/toCommodityPage")
     public String toCommodityPage(){
-        return "/commodity/commodityPage";
+        return "commodity/commodityPage";
     }
 
     /**
@@ -53,7 +52,7 @@ public class PageJumps {
      */
     @RequestMapping("/toManageCommodityPage")
     public String toManageCommodityPage(){
-        return "/manage/manageCommodityPage";
+        return "manage/manageCommodityPage";
     }
 
     /**
@@ -63,7 +62,7 @@ public class PageJumps {
      */
     @RequestMapping("/toAboutStorePage")
     public String toAboutStorePage(){
-        return "/about_store/aboutStore";
+        return "about_store/aboutStore";
     }
 
     /**
@@ -73,7 +72,7 @@ public class PageJumps {
      */
     @RequestMapping("/loginPage")
     public String toLoginPage(){
-        return "/login/loginPage";
+        return "login/loginPage";
     }
 
     /**
@@ -83,7 +82,7 @@ public class PageJumps {
      */
     @RequestMapping("/countPage")
     public String toCountPage(){
-        return "/commodity/countPage";
+        return "commodity/countPage";
     }
 
     /**
@@ -95,7 +94,18 @@ public class PageJumps {
     public String toPersonalPage(ModelMap map){
         User user = loginMapper.getPersonInfo(SecurityContextHolder.getContext().getAuthentication().getName());
         map.put("user",user);
-        return "/personal/personalPage";
+        return "personal/personalPage";
+    }
+
+    /**
+     * 通过账号查询用户信息
+     *
+     * @return
+     */
+    @RequestMapping("/showPersonalMessage")
+    public User showPersonalMessage(String id){
+        User user = loginMapper.getPersonInfo(id);
+        return user;
     }
 
     /**
@@ -105,7 +115,7 @@ public class PageJumps {
      */
     @RequestMapping("/userManage")
     public String toUserManage(){
-        return "/system/userManage";
+        return "system/userManage";
     }
 
     /**
@@ -115,6 +125,6 @@ public class PageJumps {
      */
     @RequestMapping("/toTestPage")
     public String toTestPage(){
-        return "/test/index";
+        return "test/index";
     }
 }

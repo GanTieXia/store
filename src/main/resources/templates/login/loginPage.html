@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>登录注册</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/picture/pageShow2.png">
     <link rel="stylesheet" href="/layui/css/layui.css">
     <style>
         .layui-progress-big{
@@ -16,14 +17,19 @@
             background: url("/picture/loginBackground.jpg");
             background-size: 100%;
         }
+
+        .backColor{
+            background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+        }
     </style>
 </head>
 <body style="background-color: white">
 <div>
     <div id="loginDiv">
-        <div style="padding: 20px;background-color:rgba(255,255,255,0.8);width: 387px;height: 210px;margin-top: 15%;margin-left: 36%;border-radius: 20px">
+        <div class="backColor" style="padding: 20px;background-color:rgba(255,255,255,0.8);width: 387px;height: 210px;margin-top: 15%;margin-left: 36%;border-radius: 20px">
+            <br>
             <!-- 由SpringSecurity管理控制的登录-->
-            <form action="/loginSys" method="POST" class="layui-form">
+            <form action="/loginSys" method="post" class="layui-form">
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="color: black">账号：</label>
                     <div class="layui-input-inline">
@@ -63,7 +69,8 @@
 
     <!-- 注册模块-->
     <div class="layui-form" lay-filter="selFilter" style="display: none" id="registerDiv">
-        <div style="padding: 20px;background-color:rgba(255,255,255,0.8);width: 417px;height: 550px;margin-top: 5%;margin-left: 35%;border-radius: 20px">
+        <div class="backColor" style="padding: 20px;background-color:rgba(255,255,255,0.8);width: 417px;height: 550px;margin-top: 5%;margin-left: 35%;border-radius: 20px">
+            <br>
             <div class="layui-form-item">
                 <label class="layui-form-label" style="color: black;">账号：</label>
                 <div class="layui-input-inline">

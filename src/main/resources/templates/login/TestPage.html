@@ -1,40 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>登录注册</title>
-    <link rel="stylesheet" href="../layui/css/layui.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
-<body style="background-color: #2E2D3C">
+
+<body>
+<video width="640" height="480" id="myVideo"></video>
+<input type="button" name="" value="开始" id="startBtn">
+<input type="button" name="" value="停止" id="stopBtn">
+<input type="button" name="" value="重新开始录像" id="ppBtn">
 <div>
-    <div style="padding: 20px">
-        <div class="layui-carousel" id="test2">
-            <div carousel-item>
-                <div style="background-color: #00FFFF">
-                    <img id="personagePicture" src="/picture/picture.jpg">
-                </div>
-                <div style="background-color: #1E9FFF">条目2</div>
-                <div style="background-color: #009f95">条目3</div>
-                <div style="background-color: #eb7350">条目4</div>
-                <div style="background-color: #FFB800">条目5</div>
-            </div>
-        </div>
-    </div>
+    <button id="capture">拍照</button>
 </div>
-<script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
-<script type="text/javascript" src="../layui/layui.js"></script>
-<script>
-    // 轮播图
-    layui.use('carousel', function(){
-        var carousel = layui.carousel;
-        //建造实例
-        carousel.render({
-            elem: '#test2'
-            ,width: '100%' //设置容器宽度
-            // ,arrow: 'always' //始终显示箭头
-            ,anim: 'fade' //切换动画方式
-        });
-    });
+<canvas id="canvas" width="480" height="320"></canvas>
+<script src="https://cdn.webrtc-experiment.com/MediaStreamRecorder.js"> </script>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript">
+    //  判断浏览器
+    console.log(navigator.getUserMedia)
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    var constraints = { audio: true, video: { width: 1280, height: 720, facingMode: '' } };
+    // var constraints = { audio: true, video: { width: 1280, height: 720, facingMode: { exact: "environment" } } };
+    var aa = ''; //防止两次上传
+    //  调用摄像头  成功后获取视频流：mediaStream
+    navigator.mediaDevices.getUserMedia(constraints) // 调用摄像头
+        .then(function (mediaStream) {
+            var video = document.querySelector('video');
+            let canvas = document.getElementById('canvas');
+            let context = canvas.getContext('2d');
+            //  赋值 video 并开始播放
+            video.srcObject = mediaStream;
+            video.onloadedmetadata = function (e) {
+                video.play();
+            };
+            //  录像api的调用
+            var mediaRecorder = new MediaStreamRecorder(mediaStream);
+            mediaRecorder.mimeType = 'video/mp4';
+            //  停止录像以后的回调函数
+            mediaRecorder.ondataavailable = function (blob) {
+                //-----图片放入formate给后端
+                let file = new File([blob], 'msr-' + (new Date).toISOString().replace(/:|\./g, '-') + '.mp4', {
+                    type: 'video/mp4'
+                });
+                console.log('video', file)
+                let formData = new FormData();
+                formData.append('file', file);
+                if (aa == "") { upload(formData); aa = blob }
+            };
+            $("#startBtn").click(function () {
+                //  开始录像
+                mediaRecorder.start();
+            })
+            $("#stopBtn").click(function () {
+                //  停止录像
+                mediaRecorder.stop();
+            })
+            document.getElementById('capture').addEventListener('click', function () {   //点击拍照
+                context.drawImage(video, 0, 0, 480, 320);  //拍照
+                let imgData = canvas.toDataURL("image/png");
+                console.log('imgData', imgData)
+                let formData = new FormData();
+                let file = dataURItoBlob(imgData);
+                console.log('file', file)
+                // fd.append('source_from', 'webpage_upload')//在formdata加入需要的参数
+                formData.append('file', file)
+                upload(formData) //发送图片
+            })
+            function dataURItoBlob(dataURI) {//图片要上传先转成Buffer   上传之前需要先转成二进制文档
+                var byteString = atob(dataURI.split(',')[1]);
+                var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+                var ab = new ArrayBuffer(byteString.length);
+                var ia = new Uint8Array(ab);
+                for (var i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+                return new Blob([ab], { type: mimeString });
+            }
+            //-------------------------------------------------------------------------------------
+            $("#ppBtn").click(function () {
+                if (aa !== "") { aa = ""; mediaRecorder.start(); }  //重新录制
+            })
+            // 上传
+            function upload(formData) {  //图片视频上传
+                // $.ajax({
+                //     url: '',
+                //     type: "post",
+                //     cache: false,
+                //     data: formData,
+                //     dataType: "json",
+                //     processData: false,
+                //     contentType: false,
+                //     error: function () {
+                //         alert("暂时无法操作，请刷新后再试！");
+                //     },
+                //     success: function (result) {
+                //         if (result.code == 0) {
+                //             var params = result.data;
+                //             console.log(params);
+                //             console.log(params.fileUrl);
+                //             /* $("#lzvideo").attr("src", params.fileUrl); */
+                //         } else {
+                //         }
+                //     }
+                // });
+            }
+            // //  上传结束
+        })
+        .catch(function (err) { console.log(err.name + ": " + err.message); });
 </script>
 </body>
+
 </html>

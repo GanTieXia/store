@@ -51,6 +51,7 @@
             t_count
         where
             date(count_time) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+        order by count_time
     </select>
 
 </mapper>

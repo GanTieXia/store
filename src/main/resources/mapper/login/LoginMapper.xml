@@ -87,7 +87,8 @@
         select
             id_number idNumber,
             password password,
-            is_onuse isOnUse
+            is_onuse isOnUse,
+            email email
         from
             s_user
         where
@@ -120,6 +121,7 @@
             <if test="personagePicture != null">personage_picture,</if>
             <if test="idNumber != null">id_number,</if>
             <if test="password != null">password,</if>
+            <if test="isOnUse != null">is_onuse,</if>
             <if test="createTime != null">create_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -130,6 +132,7 @@
             <if test="personagePicture != null">#{personagePicture},</if>
             <if test="idNumber != null">#{idNumber},</if>
             <if test="password != null">#{password},</if>
+            <if test="isOnUse != null">#{isOnUse},</if>
             <if test="createTime != null">#{createTime},</if>
         </trim>
     </insert>

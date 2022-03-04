@@ -10,6 +10,9 @@
     <style>
         body{margin: 10px;}
         .demo-carousel{height: 200px; line-height: 200px; text-align: center;}
+        .layui-laypage input:focus, .layui-laypage select:focus{
+            border-color: #009688!important;
+        }
     </style>
 </head>
 <body>
@@ -18,14 +21,14 @@
     <div class="layui-inline">
         <label class="layui-form-label">用户名：</label>
         <div class="layui-input-inline">
-            <input type="text" id="userName" name="userName" lay-verify="required|phone" autocomplete="off" class="layui-input">
+            <input type="text" id="userName" name="userName" autocomplete="off" class="layui-input">
         </div>
     </div>
 
     <div class="layui-inline">
         <label class="layui-form-label">账号：</label>
         <div class="layui-input-inline">
-            <input type="text" id="idNumber" name="idNumber" lay-verify="required|phone" autocomplete="off" class="layui-input">
+            <input type="text" id="idNumber" name="idNumber" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -86,12 +89,15 @@
                              return '<span style="color: red;">是</span>';
                          }}
                      }
-                    , { fixed: 'right', title: '操作', align:'center',toolbar: '#barDemo', width: 220 }
+                    ,
+                     // { fixed: 'right', title: '操作', align:'center',toolbar: '#barDemo', width: 220 }
                  ]
             ]
             ,limits: [5,10,20]
             ,limit: 10
         });
+
+
 
         //监听行工具事件
         table.on('tool(Operate)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"

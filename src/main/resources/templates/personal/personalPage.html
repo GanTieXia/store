@@ -72,7 +72,6 @@
 
         //监听提交
         form.on('submit(updateInfo)', function(data){
-            var code = '';
             $.ajax({
                 url:"/person/updatePersonInfo",
                 data:JSON.stringify( data.field),
@@ -81,11 +80,12 @@
                 type:'POST',
                 success :function (result) {
                     if(result.code == '200'){
-                        layer.msg("更新个人信息成功");
-                    } else {
-                        layer.msg("更新个人信息失败，请联系管理员");
+                        layer.msg("更新个人信息成功！");
+                    }else if(result.code == '505'){
+                        layer.msg("邮箱重复，修改失败！");
+                    } else if(result.code == '404'){
+                        layer.msg("更新个人信息失败，请联系管理员！");
                     }
-
                 }
             })
         });
