@@ -10,7 +10,8 @@
 <style>
     .layui-body{bottom: 0 !important;}
     .layui-icon{
-        font-size: 13px;
+        font-size: 15px;
+        color: #FFFAFA;
     }
 </style>
 <body>
@@ -23,14 +24,7 @@
 
         <!-- 头部区域（可配合layui 已有的水平导航）<span class="layui-badge-dot">  <span class="layui-badge">9</span>-->
         <ul class="layui-nav layui-layout-left layui-bg-black" style="height: 100%">
-            <li class="layui-nav-item">
-                <a href="javascript:;"><i class="layui-icon layui-icon-set-fill"></i>&nbsp;系统管理</a>
-                <dl class="layui-nav-child layui-bg-green"> <!-- 二级菜单 -->
-                    <dd><a href="javascript:;">角色管理</a></dd>
-                    <dd><a id="userManage" href="javascript:;">用户管理</a></dd>
-                    <dd><a href="javascript:;">在线用户</a></dd>
-                </dl>
-            </li>
+
 <!--            <li class="layui-nav-item">-->
 <!--                <a href="">商品分类</span></a>-->
 <!--                <dl class="layui-nav-child layui-bg-green"> &lt;!&ndash; 二级菜单 &ndash;&gt;-->
@@ -54,6 +48,14 @@
             </li>
             <li class="layui-nav-item">
                 <a id="aboutStore" href="javascript:;"><i class="layui-icon layui-icon-app"></i>&nbsp;关于</a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;"><i class="layui-icon layui-icon-set-fill"></i>&nbsp;系统管理</a>
+                <dl class="layui-nav-child layui-bg-green"> <!-- 二级菜单 -->
+                    <dd><a href="javascript:;">角色管理</a></dd>
+                    <dd><a id="userManage" href="javascript:;">用户管理</a></dd>
+                    <dd><a href="javascript:;">在线用户</a></dd>
+                </dl>
             </li>
         </ul>
 

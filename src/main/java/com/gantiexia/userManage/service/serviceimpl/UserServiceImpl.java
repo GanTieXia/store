@@ -242,19 +242,20 @@ public class UserServiceImpl implements UserService {
         String fileExt = names.substring(names.lastIndexOf(".") + 1).toLowerCase();
         String newName = "";
         // 文件上传后的新名
-        if(user.getIdNumber() != null){
-            newName = user.getIdNumber() + "." + fileExt;
-        } else {
-            String idNumber = SecurityContextHolder.getContext().getAuthentication().getName();
-            // 如果账号为空，就是修改头像。修改头像则从security中获取IdNumber
-            newName = idNumber + "." + fileExt;
-            // 再修改数据库中本人的头像路径
-            User userPram = new User();
-            userPram.setIdNumber(idNumber);
-            // 系统默认路径，可自己设置路径
-            userPram.setPersonagePicture("/storeProject/image/" + nowDay + "/" + newName);
-            loginMapper.updatePersonPhoto(userPram);
-        }
+        String idNumber = SecurityContextHolder.getContext().getAuthentication().getName();
+        // 如果账号为空，就是修改头像。修改头像则从security中获取IdNumber
+        newName = idNumber + "." + fileExt;
+        // 再修改数据库中本人的头像路径
+        User userPram = new User();
+        userPram.setIdNumber(idNumber);
+        // 系统默认路径，可自己设置路径
+        userPram.setPersonagePicture("/storeProject/image/" + nowDay + "/" + newName);
+
+        // 先删除原服务器内存中的头像文件，再执行存储
+
+
+        // 修改此人的头像路径
+        loginMapper.updatePersonPhoto(userPram);
 
         fileName = newName;
         // 文件的绝对路径File
