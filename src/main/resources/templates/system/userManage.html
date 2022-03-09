@@ -16,28 +16,30 @@
     </style>
 </head>
 <body>
-<div style="margin-bottom: 5px;margin-top: 10px;border:1px;">
+<div style="width:80%;margin-left:10%;margin-top: 2%;">
+    <div style="margin-bottom: 5px;margin-top: 2%;border:1px;">
 
-    <div class="layui-inline">
-        <label class="layui-form-label">用户名：</label>
-        <div class="layui-input-inline">
-            <input type="text" id="userName" name="userName" autocomplete="off" class="layui-input">
+        <div class="layui-inline">
+            <label class="layui-form-label">用户名：</label>
+            <div class="layui-input-inline">
+                <input type="text" id="userName" name="userName" autocomplete="off" class="layui-input">
+            </div>
         </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">账号：</label>
+            <div class="layui-input-inline">
+                <input type="text" id="idNumber" name="idNumber" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <button type="button" id="searchBtn" class="layui-btn" style="position: relative;left: 2%">查询</button>
+
     </div>
 
-    <div class="layui-inline">
-        <label class="layui-form-label">账号：</label>
-        <div class="layui-input-inline">
-            <input type="text" id="idNumber" name="idNumber" autocomplete="off" class="layui-input">
-        </div>
+    <div style="margin-top: 2%;">
+        <table class="layui-hide" id="demo" lay-filter="Operate"></table>
     </div>
-
-    <button type="button" id="searchBtn" class="layui-btn" style="position: relative;left: 2%">查询</button>
-
-</div>
-
-<div >
-    <table class="layui-hide" id="demo" lay-filter="Operate"></table>
 </div>
 
 <script type="text/html" id="barDemo">

@@ -32,7 +32,7 @@
         from
         t_count
         where
-        str_to_date(count_time,'%Y-%m-%d') = str_to_date(curdate(),'%Y-%m-%d')
+        str_to_date(count_time,'%Y-%m-%d') = str_to_date(#{today},'%Y-%m-%d')
     </select>
 
     <update id="updateCount" parameterType="com.gantiexia.count.entity.Count">

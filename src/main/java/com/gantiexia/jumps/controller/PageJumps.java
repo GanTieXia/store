@@ -3,6 +3,7 @@ package com.gantiexia.jumps.controller;
 import com.gantiexia.count.service.CountService;
 import com.gantiexia.userManage.entity.User;
 import com.gantiexia.userManage.mapper.LoginMapper;
+import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -93,8 +94,21 @@ public class PageJumps {
     @RequestMapping("/personalPage")
     public String toPersonalPage(ModelMap map){
         User user = loginMapper.getPersonInfo(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(StringUtil.isNullOrEmpty(user.getPersonagePicture())){
+            user.setPersonagePicture("/picture/loginBackThree.jpg");
+        }
         map.put("user",user);
         return "personal/personalPage";
+    }
+
+    /**
+     * 登陆人信息
+     *
+     * @return
+     */
+    @RequestMapping("/personalPhoto")
+    public User toShowPersonalPhoto(){
+        return loginMapper.getPersonInfo(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
     /**
@@ -109,7 +123,7 @@ public class PageJumps {
     }
 
     /**
-     * 个人主页
+     * 用户管理
      *
      * @return
      */

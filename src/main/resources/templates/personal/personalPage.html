@@ -7,46 +7,60 @@
     <link rel="stylesheet" href="../layui/css/layui.css">
 </head>
 <body>
-<div class="back">
-    <div style="width: 50%;float: left;">
+<div class="back" style="width:80%;margin-left:10%;">
+    <div style="width: 100%;float: left;">
         <form class="layui-form" style="margin-top: 50px" th:object="${user}">
-            <div class="layui-form-item">
-                <label class="layui-form-label">用户名</label>
-                <div class="layui-input-block">
-                    <input type="text" id="userName" name="userName" placeholder="最大输入长度为20" maxlength="20" required  lay-verify="required" autocomplete="off" class="layui-input" th:value="${user.userName}" >
+
+            <div style="width: 50%;float: left;">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="userName" name="userName" placeholder="最大输入长度为20" maxlength="20" required  lay-verify="required" autocomplete="off" class="layui-input" th:value="${user.userName}" >
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">账号</label>
+                    <div class="layui-input-block">
+                        <input style="background-color: #9F9F9F" type="text" id="idNumber" name="idNumber" disabled="disabled" required  lay-verify="required" autocomplete="off" class="layui-input" th:value="${user.idNumber}">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="sex" value="0" title="男" th:checked="${user.sex == '0'}">
+                        <input type="radio" name="sex" value="1" title="女" th:checked="${user.sex == '1'}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="email" placeholder="最大输入长度为30" maxlength="30" required  lay-verify="required" autocomplete="off" class="layui-input" th:value="${user.email}">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">个人简介</label>
+                    <div class="layui-input-block">
+                        <textarea name="personBriefly" placeholder="最大输入长度为100" maxlength="100" class="layui-textarea" th:text="${user.personBriefly}"></textarea>
+                    </div>
                 </div>
             </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">账号</label>
-                <div class="layui-input-block">
-                    <input style="background-color: #9F9F9F" type="text" id="idNumber" name="idNumber" disabled="disabled" required  lay-verify="required" autocomplete="off" class="layui-input" th:value="${user.idNumber}">
+            <div style="width: 50%;float: left;">
+                <!--加载头像-->
+                <div style="float: left;width: 100%;background-color:rgba(255,255,255,0.8);">
+                    <div style="margin-top: 50px;">
+                        <img id="personagePicture" th:src="${user.personagePicture}" style="width: 200px;height: 250px;position: relative;left: 215px">
+                    </div>
                 </div>
             </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">性别</label>
-                <div class="layui-input-block">
-                    <input type="radio" name="sex" value="0" title="男" th:checked="${user.sex == '0'}">
-                    <input type="radio" name="sex" value="1" title="女" th:checked="${user.sex == '1'}">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">邮箱</label>
-                <div class="layui-input-block">
-                    <input type="text" name="email" placeholder="最大输入长度为30" maxlength="30" required  lay-verify="required" autocomplete="off" class="layui-input" th:value="${user.email}">
-                </div>
-            </div>
+            <div style="clear: both"></div>
 
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">个人简介</label>
-                <div class="layui-input-block">
-                    <textarea name="personBriefly" placeholder="最大输入长度为100" maxlength="100" class="layui-textarea" th:text="${user.personBriefly}"></textarea>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <div class="layui-input-block" style="position: relative;left: 450px;margin-top: 70px">
+            <div class="layui-form-item"  style="width:80%;margin-left:10%;">
+                <div class="layui-input-block" style="margin-left:40%;position: relative;margin-top: 75px">
                     <button type="button" class="layui-btn" lay-submit lay-filter="updateInfo">提交修改</button>
                     <button type="button" id="uploadPicture" class="layui-btn">更改头像</button>
                 </div>
@@ -55,18 +69,14 @@
 
     </div>
 
-    <!--加载头像-->
-    <div style="float: left;width: 50%;margin-top: 50px;background-color:rgba(255,255,255,0.8);">
-        <div style="margin-top: 50px;">
-            <img id="personagePicture" th:src="${user.personagePicture}" style="width: 200px;height: 250px;position: relative;left: 215px">
-        </div>
-    </div>
+
+
 
 </div>
 <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../layui/layui.js"></script>
 <script>
-    //Demo
+
     layui.use('form', function(){
         var form = layui.form;
 

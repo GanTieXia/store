@@ -24,9 +24,10 @@ public interface CountMapper {
      * 查询今天的统计数据
      *
      * @param
+     * @param today
      * @return
      */
-    Count selectTodayCount();
+    Count selectTodayCount(String today);
 
     /**
      * 变更访问量

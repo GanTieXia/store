@@ -30,7 +30,8 @@ public class CountServiceImpl implements CountService {
     @Override
     synchronized public void insertCountVisit() {
         // 查询是否存在今天的统计数据
-        Count todayCount = countMapper.selectTodayCount();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Count todayCount = countMapper.selectTodayCount(sdf.format(System.currentTimeMillis()));
 
         if(todayCount == null){
             // 执行插入今天的第一条访问量数据

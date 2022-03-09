@@ -168,19 +168,10 @@ public class UserServiceImpl implements UserService {
         for(int j = 0; j< 6; j++){
             authCodes.append((int)((Math.random()*10)))  ;
         }
-        // 将验证码发送至redis
-        if(StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
-            // 将验证码放入redis,失效时间为180s
-            redisUtils.setKeyTimeOut(authCode.getEmail(),String.valueOf(authCodes),180, TimeUnit.SECONDS);
-            logger.info("验证码发送至redis，验证码："+redisUtils.get(authCode.getEmail()));
-        } else if(!StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
-            map.put("code","500");
-            map.put("message","已发送验证码，请勿重复发送");
-            return map;
-        }
         // 每个邮箱只能绑定一个用户
         User user = new User();
         List<User> userList = loginMapper.getUserMessage(user);
+
         List<User> sameEmailList = new ArrayList<>();
         for(User userPram : userList){
             if(userPram.getEmail() != null){
@@ -193,6 +184,16 @@ public class UserServiceImpl implements UserService {
         if(sameEmailList.size() > 0){
             map.put("code","505");
             map.put("message","此邮箱已被绑定");
+            return map;
+        }
+        // 将验证码发送至redis
+        if(StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
+            // 将验证码放入redis,失效时间为180s
+            redisUtils.setKeyTimeOut(authCode.getEmail(),String.valueOf(authCodes),180, TimeUnit.SECONDS);
+            logger.info("验证码发送至redis，验证码："+redisUtils.get(authCode.getEmail()));
+        } else if(!StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
+            map.put("code","500");
+            map.put("message","已发送验证码，请勿重复发送");
             return map;
         }
         // 如果成功走到这里，发送邮件
@@ -296,21 +297,13 @@ public class UserServiceImpl implements UserService {
             return map;
         }
 
-        // 设置头像路径
-        Date date = new Date();
-        // 转换成时间字符串
-        SimpleDateFormat sdl = new SimpleDateFormat("yyyyMMdd");
-        String nowDay = sdl.format(date);
-        String personagePicture = "/storeProject/image/" + nowDay + "/" + fileName;
-        user.setPersonagePicture(personagePicture);
         // 设置系统时间
-        user.setCreateTime(date);
+        user.setCreateTime(new Date());
         // 默认有效
         user.setIsOnUse("0");
 
         // 从redis中取得验证码
         String authCode = redisUtils.get(user.getEmail());
-
         // 如果redis中的验证码不存在，提示验证码失效，请重新发送
         if(StringUtil.isNullOrEmpty(authCode)){
             map.put("code","404");
@@ -333,9 +326,8 @@ public class UserServiceImpl implements UserService {
                 }
                 passWord.append(s);
             }
-
+            // 设置加密后的密码串
             user.setPassword(passWord.toString());
-
         } catch (NoSuchAlgorithmException e) {
             logger.info("密码加密失败...");
             e.printStackTrace();
@@ -383,10 +375,18 @@ public class UserServiceImpl implements UserService {
         map.put("page",(page-1)*limit);
         map.put("limit",limit);
 
+        // 邮箱加密处理
+        List<User> userList = loginMapper.getUserMessageList(map);
+        for(User userPram : userList){
+            String header = userPram.getEmail().substring(0,4);
+            String end = userPram.getEmail().substring(8);
+            userPram.setEmail(header + "****" + end);
+        }
+
         Map<String,Object> mapResult = new HashMap<>();
         mapResult.put("code","0");
         mapResult.put("message","操作成功");
-        mapResult.put("data",loginMapper.getUserMessageList(map));
+        mapResult.put("data",userList);
         mapResult.put("count",loginMapper.getUserMessageListCount(map));
 
         return mapResult;

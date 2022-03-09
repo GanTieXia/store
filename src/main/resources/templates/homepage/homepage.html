@@ -3,10 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>做点啥好呢</title>
+    <title>去哪儿</title>
     <link rel="shortcut icon" type="image/x-icon" href="/picture/pageShow2.png">
     <link rel="stylesheet" href="../layui/css/layui.css">
 </head>
+<style>
+    .layui-body{bottom: 0 !important;}
+    .layui-icon{
+        font-size: 13px;
+    }
+</style>
 <body>
 <div class="layui-layout layui-layout-admin layui-bg-black">
     <!--头部区域导航区域-->
@@ -14,9 +20,45 @@
         <div class="layui-logo layui-hide-xs layui-bg-white">
             <a href="/store/homepage" style="color: #009f95">名字没想好</a>
         </div>
+
+        <!-- 头部区域（可配合layui 已有的水平导航）<span class="layui-badge-dot">  <span class="layui-badge">9</span>-->
+        <ul class="layui-nav layui-layout-left layui-bg-black">
+            <li class="layui-nav-item">
+                <a href="javascript:;"><i class="layui-icon layui-icon-set-fill"></i>&nbsp;系统管理</a>
+                <dl class="layui-nav-child layui-bg-green"> <!-- 二级菜单 -->
+                    <dd><a href="javascript:;">角色管理</a></dd>
+                    <dd><a id="userManage" href="javascript:;">用户管理</a></dd>
+                    <dd><a href="javascript:;">在线用户</a></dd>
+                </dl>
+            </li>
+<!--            <li class="layui-nav-item">-->
+<!--                <a href="">商品分类</span></a>-->
+<!--                <dl class="layui-nav-child layui-bg-green"> &lt;!&ndash; 二级菜单 &ndash;&gt;-->
+<!--                    <dd><a href="javascript:;">手机</a></dd>-->
+<!--                    <dd><a href="javascript:;">平板</a></dd>-->
+<!--                    <dd><a href="javascript:;">电脑</a></dd>-->
+<!--                </dl>-->
+<!--            </li>-->
+<!--            <li class="layui-nav-item">-->
+<!--                <a href="">商品管理</span></a>-->
+<!--                <dl class="layui-nav-child layui-bg-green"> &lt;!&ndash; 二级菜单 &ndash;&gt;-->
+<!--                    <dd><a href="javascript:;">上架商品</a></dd>-->
+<!--                    <dd><a href="javascript:;">下架商品</a></dd>-->
+<!--                </dl>-->
+<!--            </li>-->
+            <li class="layui-nav-item">
+                <a href="javascript:;"><i class="layui-icon layui-icon-note"></i>&nbsp;推荐</span></a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;"><i class="layui-icon layui-icon-dialogue"></i>&nbsp;广场</span></a>
+            </li>
+            <li class="layui-nav-item">
+                <a id="aboutStore" href="javascript:;"><i class="layui-icon layui-icon-app"></i>&nbsp;关于</a>
+            </li>
+        </ul>
+
         <!-- 头部区域（可配合layui 已有的水平导航） -->
         <ul class="layui-nav layui-layout-right layui-bg-black">
-
             <li class="layui-show-md-inline-block" style="position:relative;top: 5px">
                 <a href="javascript:;" style="color: white">
                     <span id="nowTime"></span>
@@ -26,11 +68,12 @@
             <li class="layui-nav-item layui-hide layui-show-md-inline-block">
 
                 <a href="javascript:;">
-                    <img id="personagePicture" src="/picture/picture.jpg" class="layui-nav-img">
+                    <img id="personagePicture" src="/picture/loginBackThree.jpg" class="layui-nav-img">
                     <span id="userName">用户名</span>  |  <span id="idNumber">账号</span>
                 </a>
                 <dl class="layui-nav-child">
-                    <dd><a id="personalPage">个人中心</a></dd>
+                    <dd><a id="personalPage" href="javascript:;">个人中心</a></dd>
+                    <dd><a id="updatePassWord" href="javascript:;">修改密码</a></dd>
                     <dd><a href="/logout">退出</a></dd>
                 </dl>
             </li>
@@ -42,64 +85,19 @@
         </ul>
     </div>
 
-    <!--左侧导航区域-->
-    <div class="layui-side layui-bg-black">
-        <div class="layui-side-scroll">
-            <ul class="layui-nav layui-bg-black layui-nav-tree"  lay-filter="test">
-
-                <li class="layui-nav-item">
-                    <a class="" href="javascript:;">系统管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a>角色管理</a></dd>
-                        <dd><a id="userManage">用户管理</a></dd>
-                        <dd><a>在线用户</a></dd>
-                    </dl>
-                </li>
-
-                <li class="layui-nav-item">
-                    <a class="" href="javascript:;">商品分类</a>
-                    <dl class="layui-nav-child">
-                        <dd><a id="telPhone">手机</a></dd>
-                        <dd><a >平板</a></dd>
-                        <dd><a >电脑</a></dd>
-                    </dl>
-                </li>
-
-                <li class="layui-nav-item">
-                    <a class="" href="javascript:;">商品管理</a>
-                    <dl class="layui-nav-child">
-                        <dd><a id="uploadCommodity">上架商品</a></dd>
-                        <dd><a href="javascript:;">下架商品</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item"><a href="javascript:;">商品审核</a></li>
-                <li class="layui-nav-item"><a href="javascript:;">我的收藏</a></li>
-                <li class="layui-nav-item">
-                    <a class="" href="javascript:;">我的订单</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">待发货</a></dd>
-                        <dd><a href="javascript:;">已签收</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item" ><a id="aboutStore">关于杂货铺</a></li>
-            </ul>
-        </div>
-    </div>
-
     <!-- 内容主体区域 scrolling=no:不使用生成下拉-->
-    <div class="layui-body">
+    <div class="layui-body" style="text-align: center;margin: 0 auto">
         <iframe id="informationMain" src="" frameborder=0 style="width: 100%;height: 100%;"></iframe>
     </div>
 
-    <!-- 底部固定区域 -->
-    <div class="layui-footer">
-        <p style="text-align: center;color: black">Yours杂货铺</p>
-    </div>
+<!--     底部固定区域 -->
+<!--    <div class="layui-footer">-->
+<!--        <p style="text-align: center;color: black">去哪儿</p>-->
+<!--    </div>-->
 </div>
 <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../layui/layui.js"></script>
 <script>
-
     function timeStampString() {
         var dateTime = new Date();
         var show_day = ['星期一','星期二','星期三','星期四','星期五','星期六','星期日'];
@@ -134,14 +132,20 @@
         async:false,
         success:function (data) {
             if(data.userName == null && data.idNumber == null){
-                $('#userName').html("用户名");
-                $('#idNumber').html("账号");
+                $('#userName').html('用户名');
+                $('#idNumber').html('账号');
 
             } else if(data != null){
-                $('#userName').html(data.userName);
-                $('#idNumber').html(data.idNumber);
-                $('#personagePicture').attr('src',data.personagePicture);
+                if(data.userName == null || data.userName == ''){
+                    $('#userName').html('用户名');
+                } else {
+                    $('#userName').html(data.userName);
+                }
 
+                $('#idNumber').html(data.idNumber);
+                if(data.personagePicture != null && data.personagePicture != ''){
+                    $('#personagePicture').attr('src',data.personagePicture);
+                }
             }
         }
     })

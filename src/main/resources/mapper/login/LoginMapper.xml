@@ -115,10 +115,7 @@
         insert into s_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
-            <if test="userName != null">user_name,</if>
-            <if test="sex != null">sex,</if>
             <if test="email != null">email,</if>
-            <if test="personagePicture != null">personage_picture,</if>
             <if test="idNumber != null">id_number,</if>
             <if test="password != null">password,</if>
             <if test="isOnUse != null">is_onuse,</if>
@@ -126,10 +123,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
-            <if test="userName != null">#{userName},</if>
-            <if test="sex != null">#{sex},</if>
             <if test="email != null">#{email},</if>
-            <if test="personagePicture != null">#{personagePicture},</if>
             <if test="idNumber != null">#{idNumber},</if>
             <if test="password != null">#{password},</if>
             <if test="isOnUse != null">#{isOnUse},</if>

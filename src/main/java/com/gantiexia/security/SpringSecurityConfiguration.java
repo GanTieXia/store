@@ -62,19 +62,19 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         // 配置登录请求相关内容
+        http.formLogin()
+                .usernameParameter("idNumber") // 登录表单的账号name属性值，默认username。可自行通过此语句配置
+                .passwordParameter("password") // 登录表单的密码name属性值，默认password。可自行通过此语句配置
+                .loginPage("/store/loginPage") // 当用户未登录的时候默认跳转到登录界面
+                .loginProcessingUrl("/loginSys") // 对应登录表单上的action属性值
+                .successForwardUrl("/store/homepage");
 
         // 需要认证的请求地址
         http.authorizeRequests()
                 .antMatchers("/store/loginPage").permitAll() // 放开登录页面
                 .antMatchers("/login/getNextIdNumber","/login/checkCode","/login/layupload","/login/register").permitAll() // 放开注册页面的账号生成、邮件发送、上传头像、注册功能
-                .antMatchers("/**/**.js","/layui/**","/picture/**").permitAll() // 静态资源文件可访问
+                .antMatchers("/**/**.css","/**/**.js","/layui/**","/picture/**").permitAll() // 静态资源文件可访问
                 .anyRequest().authenticated() // 任何请求都需认证以后才能访问
-                .and().formLogin()
-                .usernameParameter("idNumber") // 登录表单的账号name属性值，默认username。可自行通过此语句配置
-                .passwordParameter("password") // 登录表单的密码name属性值，默认password。可自行通过此语句配置
-                .loginPage("/store/loginPage") // 当用户未登录的时候默认跳转到登录界面
-                .loginProcessingUrl("/loginSys") // 对应登录表单上的action属性值
-                .successForwardUrl("/store/homepage")
         ;
 
         // 配置退出登录的请求
