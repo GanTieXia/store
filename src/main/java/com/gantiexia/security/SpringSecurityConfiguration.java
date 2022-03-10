@@ -72,6 +72,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // 需要认证的请求地址
         http.authorizeRequests()
                 .antMatchers("/store/loginPage").permitAll() // 放开登录页面
+                .antMatchers("/login/updatePassword").permitAll() // 放开修改密码请求
                 .antMatchers("/login/getNextIdNumber","/login/checkCode","/login/layupload","/login/register").permitAll() // 放开注册页面的账号生成、邮件发送、上传头像、注册功能
                 .antMatchers("/**/**.css","/**/**.js","/layui/**","/picture/**").permitAll() // 静态资源文件可访问
                 .anyRequest().authenticated() // 任何请求都需认证以后才能访问

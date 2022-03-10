@@ -161,48 +161,16 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Map<String,String> checkCode(AuthCode authCode) {
-        // 验证码发送结果状态回显
-        Map<String,String> map = new HashMap<>();
-        // 生成6位随机邮件验证码
-        StringBuffer authCodes = new StringBuffer();
-        for(int j = 0; j< 6; j++){
-            authCodes.append((int)((Math.random()*10)))  ;
+        // 如果账号为空，则是修改密码文本。如果账号不为空，则是注册文本。
+        String content = "";
+        if(!StringUtil.isNullOrEmpty(authCode.getIdNumber())){
+            content = "欢迎您的注册！<br>您的注册验证码为:<label style=\"color: red\">";
+        } else if(StringUtil.isNullOrEmpty(authCode.getIdNumber())){
+            // 通过邮箱找到此人的账号
+            String idNumber = loginMapper.getIdNumber(authCode.getEmail());
+            content = "用户" + idNumber +"，您好！<br>您修改密码的验证码为:<label style=\"color: red\">";
         }
-        // 每个邮箱只能绑定一个用户
-        User user = new User();
-        List<User> userList = loginMapper.getUserMessage(user);
-
-        List<User> sameEmailList = new ArrayList<>();
-        for(User userPram : userList){
-            if(userPram.getEmail() != null){
-                if(userPram.getEmail().equals(authCode.getEmail())){
-                    sameEmailList.add(userPram);
-                }
-            }
-        }
-        // 当重复绑定一个邮箱时
-        if(sameEmailList.size() > 0){
-            map.put("code","505");
-            map.put("message","此邮箱已被绑定");
-            return map;
-        }
-        // 将验证码发送至redis
-        if(StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
-            // 将验证码放入redis,失效时间为180s
-            redisUtils.setKeyTimeOut(authCode.getEmail(),String.valueOf(authCodes),180, TimeUnit.SECONDS);
-            logger.info("验证码发送至redis，验证码："+redisUtils.get(authCode.getEmail()));
-        } else if(!StringUtil.isNullOrEmpty(redisUtils.get(authCode.getEmail()))){
-            map.put("code","500");
-            map.put("message","已发送验证码，请勿重复发送");
-            return map;
-        }
-        // 如果成功走到这里，发送邮件
-        map.put("code","200");
-        map.put("message","验证码发送成功");
-        // 当验证码生成成功时才发送验证码
-        MailUtil.send(authCode.getEmail(), "您的注册信息", "欢迎您的注册！<br>您的注册验证码为:<label style=\"color: red\">"+authCodes+"</label>" +
-                "<br>请妥善保管，防止丢失！<br>如不是您本人操作，请忽略！", true);
-        return map;
+        return sendCode(authCode.getIdNumber(),authCode.getEmail(),content);
     }
 
     /**
@@ -291,6 +259,7 @@ public class UserServiceImpl implements UserService {
         // 当多次点击注册按钮时
         User userPram = new User();
         userPram.setIdNumber(user.getIdNumber());
+
         List<User> userList = loginMapper.getUserMessage(userPram);
         if(userList.size() > 0){
             map.put("code","404");
@@ -308,34 +277,14 @@ public class UserServiceImpl implements UserService {
         // 如果redis中的验证码不存在，提示验证码失效，请重新发送
         if(StringUtil.isNullOrEmpty(authCode)){
             map.put("code","404");
-            map.put("message","验证码失效，请重新发送");
+            map.put("message","验证码失效或未发送验证码，请重新发送");
             return map;
-        }
-
-        // 密码加密方式：MD5
-        try {
-            MessageDigest digest = MessageDigest.getInstance("MD5");
-            byte[] tmp = digest.digest(user.getPassword().getBytes());
-
-            // 转换为以十六进制的无符号整数形式，用一个整数参数的字符串表示形式
-            // 可自行定义，但是要与SpringSecurity中的密码校验方式相同
-            StringBuilder passWord = new StringBuilder("");
-            for(byte b : tmp){
-                String s = Integer.toHexString(b & 0xFF);
-                if(s.length() == 1){
-                    passWord.append("0");
-                }
-                passWord.append(s);
-            }
-            // 设置加密后的密码串
-            user.setPassword(passWord.toString());
-        } catch (NoSuchAlgorithmException e) {
-            logger.info("密码加密失败...");
-            e.printStackTrace();
         }
 
         // 如果缓存中的验证码与传回来的验证码相等，执行插入，完成注册
         if(authCode.equals(user.getAuthCode())){
+            // 设置加密后的密码串
+            user.setPassword(encryptPassword(user.getPassword()));
             // 执行插入
             int n = loginMapper.register(user);
             if(n == 1){
@@ -443,5 +392,138 @@ public class UserServiceImpl implements UserService {
             map.put("message","操作失败！");
         }
         return map;
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param user
+     * @return
+     */
+    @Override
+    public Map<String, String> editPassWord(User user) {
+        // 返回结果集
+        Map<String,String> map = new HashMap<>();
+        // 从redis中取得验证码，校验验证码是否正确
+        String authCodeRedis = redisUtils.get(user.getEmail());
+        // 如果redis中的验证码不存在，提示验证码失效，请重新发送
+        if(StringUtil.isNullOrEmpty(authCodeRedis)){
+            map.put("code","404");
+            map.put("message","验证码失效或未发送验证码，请重新发送！");
+            return map;
+        }
+        // 如果输入的验证码与发送的验证码不相等
+        if(!user.getAuthCode().equals(authCodeRedis)){
+            map.put("code","404");
+            map.put("message","验证码错误！");
+            return map;
+        }
+
+        // 如果顺利走到这里，执行修改
+        User editPasswordUser = new User();
+        // 加密后的密码
+        editPasswordUser.setPassword(encryptPassword(user.getPassword()));
+        // 邮箱
+        editPasswordUser.setEmail(user.getEmail());
+        // 执行修改
+        int n = loginMapper.updatePassword(editPasswordUser);
+        if(n == 1){
+            map.put("code","200");
+            map.put("message","密码修改成功！");
+            return map;
+        } else {
+            map.put("code","200");
+            map.put("message","密码修改失败！");
+            return map;
+        }
+    }
+
+    /**
+     * 向redis发送验证码的公共方法
+     *
+     * @param idNumber
+     * @param email
+     * @param content
+     * @return
+     */
+    public Map<String,String> sendCode(String idNumber, String email, String content) {
+        // 验证码发送结果状态回显
+        Map<String,String> map = new HashMap<>();
+
+        // 校验邮箱是否正确
+
+
+        // 生成6位随机邮件验证码
+        StringBuffer authCodes = new StringBuffer();
+        for(int j = 0; j< 6; j++){
+            authCodes.append((int)((Math.random()*10)))  ;
+        }
+
+        // 如果是注册,账号不为空,判断此邮箱是否被绑定。如果是修改密码，账号为空不走此步逻辑
+        if(!StringUtil.isNullOrEmpty(idNumber)){
+            // 每个邮箱只能绑定一个用户
+            User user = new User();
+            List<User> userList = loginMapper.getUserMessage(user);
+
+            List<User> sameEmailList = new ArrayList<>();
+            for(User userPram : userList){
+                if(userPram.getEmail() != null){
+                    if(userPram.getEmail().equals(email)){
+                        sameEmailList.add(userPram);
+                    }
+                }
+            }
+            // 当重复绑定一个邮箱时
+            if(sameEmailList.size() > 0){
+                map.put("code","505");
+                map.put("message","此邮箱已被绑定");
+                return map;
+            }
+        }
+
+        // 将验证码发送至redis
+        if(StringUtil.isNullOrEmpty(redisUtils.get(email))){
+            // 将验证码放入redis,失效时间为180s
+            redisUtils.setKeyTimeOut(email,String.valueOf(authCodes),180, TimeUnit.SECONDS);
+            logger.info("验证码发送至redis，验证码："+redisUtils.get(email));
+        } else if(!StringUtil.isNullOrEmpty(redisUtils.get(email))){
+            map.put("code","500");
+            map.put("message","已发送验证码，请勿重复发送");
+            return map;
+        }
+        // 如果成功走到这里，发送邮件
+        map.put("code","200");
+        map.put("message","验证码发送成功");
+        // 当验证码生成成功时才发送验证码
+        MailUtil.send(email, "来自生活馆的邮件", content + authCodes+"</label>" + "<br>请妥善保管，防止丢失！<br>如不是您本人操作，请忽略！", true);
+        return map;
+    }
+
+    /**
+     * 加密密码的方法
+     *
+     * @return
+     */
+    public String encryptPassword(String password){
+        try {
+            MessageDigest digest = MessageDigest.getInstance("MD5");
+            byte[] tmp = digest.digest(password.getBytes());
+
+            // 转换为以十六进制的无符号整数形式，用一个整数参数的字符串表示形式
+            // 可自行定义，但是要与SpringSecurity中的密码校验方式相同
+            StringBuilder passWord = new StringBuilder("");
+            for(byte b : tmp){
+                String s = Integer.toHexString(b & 0xFF);
+                if(s.length() == 1){
+                    passWord.append("0");
+                }
+                passWord.append(s);
+            }
+            return passWord.toString();
+        } catch (NoSuchAlgorithmException e) {
+            logger.info("密码加密失败...");
+            e.printStackTrace();
+        }
+        return null;
     }
 }

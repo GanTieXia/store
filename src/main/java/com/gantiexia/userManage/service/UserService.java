@@ -75,6 +75,14 @@ public interface UserService {
     Map<String,String> register(User user);
 
     /**
+     * 修改密码功能
+     *
+     * @param user
+     * @return
+     */
+    Map<String,String> editPassWord(User user);
+
+    /**
      * 核对登录密码
      *
      * @param user

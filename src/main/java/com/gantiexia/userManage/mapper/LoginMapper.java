@@ -101,4 +101,20 @@ public interface LoginMapper {
      * @return
      */
     int updatePersonInfo(User user);
+
+    /**
+     * 通过邮箱查询出此人的账号
+     *
+     * @param email
+     * @return
+     */
+    String getIdNumber(String email);
+
+    /**
+     * 修改密码
+     *
+     * @param user
+     * @return
+     */
+    int updatePassword(User user);
 }

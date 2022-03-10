@@ -6,6 +6,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/picture/pageShow2.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
     <link rel="stylesheet" href="/css/loginPageTwo.css">
+    <link rel="stylesheet" href="../layui/css/layui.css">
 </head>
 <body>
     <div class="container right-panel-active">
@@ -19,7 +20,7 @@
                 <input type="text" placeholder="验证码" id="checkCode" name="checkCode" required class="input">
                 <input type="password" placeholder="账号密码" id="passwordRegister" name="password"  required class="input">
                 <button class="submit" type="button" id="registerRegister">注 册</button>
-                <a style="position: relative;top: -248px" class="sendEmail" id="sendAuthCodeEmail" href="##">发送验证码</a>
+                <a style="position: relative;top: -242px" class="sendEmail" id="sendAuthCodeEmail" href="##">发送验证码</a>
             </form>
         </div>
 
@@ -32,8 +33,14 @@
                 <label class="loginError" th:if="${param.error}"
                        th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}">
                 </label>
-                <a class="link" href="javascript:void(0);">忘记密码？</a>
+<!--                <div class="layui-form-item">-->
+<!--                    <div class="layui-input-block">-->
+<!--                        <input type="checkbox" id="remember-me" name="remember-me" title="记住我" lay-skin="primary">-->
+<!--                    </div>-->
+<!--                </div>-->
+                <a class="link" href="javascript:void(0);" style="font-style: italic" id="forgetPassword">忘记账号或密码？</a>
                 <button class="submit" type="button" id="loginTest">登 录</button>
+                <a class="link" href="javascript:void(0);" id="privateNegotiate">《隐私协议》</a>
             </form>
         </div>
 
@@ -55,16 +62,26 @@
 <script type="text/javascript" src="../layui/layui.js"></script>
 <script>
     window.addEventListener('load',()=>{
-        // 我们需要获取两个切换按钮 因此需要到html结构中 定义特殊类名或id名
-        const goSignIn = document.querySelector('#goSignIn');
-        const goSignUp = document.querySelector('#goSignUp');
-        // 获取被切换的样式类
-        const container = document.querySelector('.container');
-        // 添加点击事件
-        goSignIn.addEventListener('click',()=>{
-            container.classList.remove('switch');
+        // 点击去登录切换
+        $('#goSignIn').click(function () {
+            // 改变修改密码的ID值
+            $('#editPassWord').attr("id","registerRegister");
+            // 切换菜单
+            $('.container').removeClass('switch');
         })
-        goSignUp.addEventListener('click',()=>{
+
+        // 点击去注册切换
+        $('#goSignUp').click(function () {
+            // 显示账号输入框
+            $('#idNumberRegister').attr("type","text");
+            // 将按钮的值改为注册
+            $('#registerRegister').html('注册');
+            // 清空注册界面邮箱输入框的值
+            $('#email').val('');
+            // 清空注册界面验证码输入框的值
+            $('#checkCode').val('');
+            // 清空注册界面密码输入框的值
+            $('#passwordRegister').val('');
             // 填充将要被注册的账号
             $.ajax({
                 type:"post",
@@ -74,14 +91,39 @@
                     $('#idNumberRegister').val(data)
                 }
             })
-            container.classList.add('switch');
+            $('.container').addClass('switch');
         })
-        // 原理：通过点击goSignIn登录页按钮时 就删除switch这个类名
-        // 因为之前已经定义好了样式 删除switch类名 就会恢复成没有设置包含switch类
-        // 反之点击goSignUp 就会添加switch类名 显示我们默认页面
-        // 可以看到页面没有加过渡效果 继续前往css设置把！
+
+        // 点击忘记密码
+        $('#forgetPassword').click(function () {
+            // 清空注册界面账号输入框的值
+            $('#idNumberRegister').val('');
+            // 清空注册界面邮箱输入框的值
+            $('#email').val('');
+            // 清空注册界面验证码输入框的值
+            $('#checkCode').val('');
+            // 清空注册界面密码输入框的值
+            $('#passwordRegister').val('');
+            // 隐藏账号输入框
+            $('#idNumberRegister').attr("type","hidden");
+            // 将按钮的值改为修改密码
+            $('#registerRegister').html('修改密码');
+
+            // 切换到修改密码界面
+            $('.container').addClass('switch');
+        })
+
     })
 
+    // 隐私协议
+    $('#privateNegotiate').click(function () {
+        layer.open({
+            title: '隐私协议'
+            ,content: '平台不会泄露您的任何个人隐私。<br>请放心注册，密码在后台已做加密处理！'
+        });
+    })
+
+    // 点击登录
     $('#loginTest').click(function () {
         // 账号
         var idNumber = $('#idNumber').val();
@@ -110,21 +152,32 @@
     $('#sendAuthCodeEmail').click(function () {
         // 邮箱
         var email = $('#email').val();
-
+        // 账号
+        var idNumber = $('#idNumberRegister').val();
         if(email == null || email == ''){
             layer.msg('请输入注册邮箱', {
                 // 2s后自动关闭
                 time: 2000,
             });
             return;
+        } else {
+            // 邮箱正则表达式验证
+            var checkEmail = /^\w+@[a-z0-9]+\.[a-z]{2,4}$/;
+            if(!checkEmail.test(email)) {
+                layer.msg('请输入正确的邮箱', {
+                    // 2s后自动关闭
+                    time: 2000,
+                });
+            }
         }
-        // 发送验证码
+        // 执行发送
         $.ajax({
             type:"post",
             url : "/login/checkCode",
             async:false,
             data : {
                 email : email,
+                idNumber : idNumber
             },
             success:function (data) {
                 layer.msg(data.message, {
@@ -152,7 +205,7 @@
         // 验证码
         var authCode = $('#checkCode').val();
         if(email == null || authCode == ''){
-            layer.msg('请输入注册验证码', {
+            layer.msg('请输入验证码', {
                 // 2s后自动关闭
                 time: 2000,
             });
@@ -161,30 +214,53 @@
         // 密码
         var password = $('#passwordRegister').val();
         if(password == null || password == ''){
-            layer.msg('请输入注册账号密码', {
+            layer.msg('请输入账号密码', {
                 // 2s后自动关闭
                 time: 2000,
             });
             return;
         }
-        // 添加用户
-        $.ajax({
-            type:"post",
-            url : "/login/register",
-            async:false,
-            data : {
-                idNumber : idNumber,
-                password : password,
-                email : email,
-                authCode : authCode
-            },
-            success:function (data) {
-                layer.msg(data.message, {
-                    // 1s后自动关闭
-                    time: 1000,
-                });
-            }
-        })
+
+        // 如果ID为空，则是修改密码
+        if(idNumber == '' || idNumber == null){
+            // 修改密码
+            $.ajax({
+                type:"post",
+                url : "/login/updatePassword",
+                async:false,
+                data : {
+                    email : email,
+                    authCode : authCode,
+                    password : password
+                },
+                success:function (data) {
+                    layer.msg(data.message, {
+                        // 2s后自动关闭
+                        time: 2000,
+                    });
+                }
+            })
+        } else {
+            // 如果ID为空，则是添加用户
+            $.ajax({
+                type:"post",
+                url : "/login/register",
+                async:false,
+                data : {
+                    idNumber : idNumber,
+                    password : password,
+                    email : email,
+                    authCode : authCode
+                },
+                success:function (data) {
+                    layer.msg(data.message, {
+                        // 1s后自动关闭
+                        time: 1000,
+                    });
+                }
+            })
+        }
+
     })
 </script>
 </html>

@@ -170,4 +170,19 @@
             id = #{id}
     </update>
 
+    <select id="getIdNumber" parameterType="java.lang.String" resultType="java.lang.String">
+        select
+        id_number idNumber
+        from
+        s_user
+        where email = #{email}
+    </select>
+
+    <update id="updatePassword" parameterType="com.gantiexia.userManage.entity.User">
+        update s_user set
+            password = #{password}
+        where
+            email = #{email}
+    </update>
+
 </mapper>

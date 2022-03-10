@@ -136,4 +136,15 @@ public class LoginCtrl {
     public Map<String,String> updateOnUse(User user){
         return userService.updateOnUse(user);
     }
+
+    /**
+     * 修改密码
+     *
+     * @return
+     */
+    @RequestMapping("/updatePassword")
+    @ResponseBody
+    public Map<String,String> updatePassword(User user){
+        return userService.editPassWord(user);
+    }
 }
