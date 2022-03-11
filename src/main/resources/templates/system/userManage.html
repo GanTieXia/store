@@ -72,8 +72,8 @@
             ,page: true
             ,cols: [
                  [
-                    {field: 'userName', title: '用户名', align:'center', width:120}
-                    ,{field: 'sex', title: '性别', align:'center', width:80, templet : function (d){
+                    {field: 'userName', title: '用户名', align:'center', width:'10%'}
+                    ,{field: 'sex', title: '性别', align:'center', width:'5%', templet : function (d){
                          if(d.sex == '0'){
                              return '<span style="color: #18A4D0;">男</span>';
                          }else if(d.sex == '1'){
@@ -82,11 +82,11 @@
                              return '<span></span>';
                          }}
                     }
-                    ,{field: 'email', title: '邮箱', align:'center', width:180}
-                    ,{field: 'idNumber', title: '账号', align:'center', width: 120}
-                    ,{field: 'personBriefly', title: '个人简介', align:'center', width: 260}
-                    ,{field: 'createTimeText', title: '创建时间', align:'center', width: 210, sort: true}
-                     ,{field: 'isOnUse', title: '是否禁用', align:'center', width: 100,templet : function (d){
+                    ,{field: 'email', title: '邮箱', align:'center', width:'18%'}
+                    ,{field: 'idNumber', title: '账号', align:'center', width: '13%'}
+                    ,{field: 'personBriefly', title: '个人简介', align:'center', width: '18%'}
+                    ,{field: 'createTimeText', title: '创建时间', align:'center', width: '15%', sort: true}
+                     ,{field: 'isOnUse', title: '是否禁用', align:'center', width: '10%',templet : function (d){
                          if(d.isOnUse == 0){
                              return '<span>否</span>';
                          }else if(d.isOnUse == 1){
@@ -97,6 +97,9 @@
                      // { fixed: 'right', title: '操作', align:'center',toolbar: '#barDemo', width: 220 }
                  ]
             ]
+            ,done : function(res, curr, count){
+                $('table').css("width","100%")
+            }
             ,limits: [5,10,20]
             ,limit: 10
         });

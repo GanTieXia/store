@@ -37,7 +37,7 @@ body{
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url('https://cdn.stocksnap.io/img-thumbs/960w/calm-sea_8V46UZCS0V.jpg') no-repeat fixed center;
+    background: url('https://cdn.stocksnap.io/img-thumbs/960w/green-plant_O1ISP9UOQE.jpg') no-repeat fixed center;
     background-size: cover;
 }
 
@@ -48,7 +48,7 @@ body{
     left: -100%;
     width: 200%;
     height: 100%;
-    background: url('https://cdn.stocksnap.io/img-thumbs/960w/calm-sea_8V46UZCS0V.jpg') no-repeat fixed
+    background: url('https://cdn.stocksnap.io/img-thumbs/960w/green-plant_O1ISP9UOQE.jpg') no-repeat fixed
     center;
     background-size: cover;
     transition: transform .5s ease-in-out;
