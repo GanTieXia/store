@@ -19,7 +19,7 @@
     <!--头部区域导航区域-->
     <div class="layui-header layui-bg-black">
         <div class="layui-logo layui-hide-xs layui-bg-white">
-            <a href="/store/homepage" style="color: #009f95">名字没想好</a>
+            <a id="toHomePage" href="javascript:;" style="color: #009f95">名字没想好</a>
         </div>
 
         <!-- 头部区域（可配合layui 已有的水平导航）<span class="layui-badge-dot">  <span class="layui-badge">9</span>-->
@@ -154,6 +154,11 @@
 
     // 默认展示杂货铺的统计图表首页
     $('#informationMain').attr('src','/store/countPage');
+
+    // 点击项目图标的时候加载主页
+    $('#toHomePage').click(function () {
+        $('#informationMain').attr('src','/store/countPage');
+    })
 
     // 点击手机的时候
     $('#telPhone').click(function () {
